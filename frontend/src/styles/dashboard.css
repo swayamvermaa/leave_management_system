@@ -1,0 +1,13 @@
+.card {
+  border-radius: 12px;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  transition: 0.3s;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}

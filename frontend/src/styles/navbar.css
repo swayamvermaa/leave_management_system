@@ -1,0 +1,11 @@
+.navbar {
+  height: 70px;
+}
+
+.navbar button {
+  transition: 0.3s;
+}
+
+.navbar button:hover {
+  transform: scale(1.05);
+}
