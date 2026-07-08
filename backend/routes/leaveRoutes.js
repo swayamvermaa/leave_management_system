@@ -11,7 +11,10 @@ import {
   getOrganizerLeaves,
   organizerDecision,
   getMentorLeaves,
-} from "../controllers/leaveController.js";"../controllers/leaveController.js";
+  mentorDecision,
+  getHodLeaves,
+  hodDecision,
+} from "../controllers/leaveController.js";
 
 const router = express.Router();
 
@@ -29,6 +32,24 @@ router.get(
   protect,
   authorize("mentor"),
   getMentorLeaves
+);
+router.put(
+  "/mentor/:id",
+  protect,
+  authorize("mentor"),
+  mentorDecision
+);
+router.get(
+  "/hod",
+  protect,
+  authorize("hod"),
+  getHodLeaves
+);
+router.put(
+  "/hod/:id",
+  protect,
+  authorize("hod"),
+  hodDecision
 );
 
 export default router;

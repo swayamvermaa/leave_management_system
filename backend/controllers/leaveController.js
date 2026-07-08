@@ -169,3 +169,147 @@ export const getMentorLeaves = async (req, res) => {
     });
   }
 };
+// Mentor Approve / Reject Leave
+export const mentorDecision = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, remarks } = req.body;
+
+    if (!["Approved", "Rejected"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Status must be Approved or Rejected.",
+      });
+    }
+
+    const leave = await Leave.findById(id);
+
+    if (!leave) {
+      return res.status(404).json({
+        success: false,
+        message: "Leave not found.",
+      });
+    }
+
+    // Organizer must approve first
+    if (leave.organizerStatus !== "Approved") {
+      return res.status(400).json({
+        success: false,
+        message: "Organizer approval is required first.",
+      });
+    }
+
+    leave.mentorStatus = status;
+    leave.remarks = remarks || leave.remarks;
+
+    if (status === "Rejected") {
+      leave.finalStatus = "Rejected";
+    }
+
+    await leave.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Leave ${status} by Mentor.`,
+      data: leave,
+    });
+
+  } catch (error) {
+    console.error("Mentor Decision Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// HOD Dashboard - Get Pending Leaves
+export const getHodLeaves = async (req, res) => {
+  try {
+    const leaves = await Leave.find({
+      organizerStatus: "Approved",
+      mentorStatus: "Approved",
+      hodStatus: "Pending",
+    })
+      .populate(
+        "student",
+        "name email enrollmentNumber department semester"
+      )
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: leaves.length,
+      data: leaves,
+    });
+
+  } catch (error) {
+    console.error("HOD Dashboard Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// HOD Approve / Reject Leave
+export const hodDecision = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, remarks } = req.body;
+
+    // Validate status
+    if (!["Approved", "Rejected"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Status must be Approved or Rejected.",
+      });
+    }
+
+    // Find leave
+    const leave = await Leave.findById(id);
+
+    if (!leave) {
+      return res.status(404).json({
+        success: false,
+        message: "Leave not found.",
+      });
+    }
+
+    // Check previous approvals
+    if (
+      leave.organizerStatus !== "Approved" ||
+      leave.mentorStatus !== "Approved"
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Organizer and Mentor approval required first.",
+      });
+    }
+
+    // Update HOD status
+    leave.hodStatus = status;
+    leave.remarks = remarks || leave.remarks;
+
+    // Final Status
+    leave.finalStatus = status;
+
+    await leave.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Leave ${status} by HOD.`,
+      data: leave,
+    });
+
+  } catch (error) {
+    console.error("HOD Decision Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
