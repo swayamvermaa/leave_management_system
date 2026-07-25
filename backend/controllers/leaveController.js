@@ -1,23 +1,25 @@
 import Leave from "../models/Leave.js";
+import User from "../models/User.js";
 
 // Apply Leave
 export const applyLeave = async (req, res) => {
   try {
     const {
-      eventName,
-      organizerName,
-      reason,
-      fromDate,
-      toDate,
+        event,
+        eventName,
+        organizer,
+        organizerName,
+        reason,
+        fromDate,
+        toDate,
     } = req.body;
 
     // Validate required fields
     if (
-      !eventName ||
-      !organizerName ||
-      !reason ||
-      !fromDate ||
-      !toDate
+        !event ||
+        !reason ||
+        !fromDate ||
+        !toDate
     ) {
       return res.status(400).json({
         success: false,
@@ -25,15 +27,72 @@ export const applyLeave = async (req, res) => {
       });
     }
 
-    // Create leave application
-    const leave = await Leave.create({
-      student: req.user._id,
-      eventName,
-      organizerName,
-      reason,
-      fromDate,
-      toDate,
-    });
+const student = await User.findById(req.user._id);
+
+// console.log("===== STUDENT =====");
+// console.log(student);
+
+const mentor = await User.findOne({
+  role: "mentor",
+  mentorCourse: student.course,
+  mentorYear: Number(student.year),
+  mentorSection: student.section,
+});
+
+// console.log("===== MENTOR =====");
+// console.log(mentor);
+
+const hod = await User.findOne({
+  role: "hod",
+  course: student.course,
+  isHOD: true,
+});
+
+// console.log("===== HOD =====");
+// console.log(hod);
+
+
+console.log("===== SAVING DATA =====");
+console.log({
+  student: student._id,
+  mentor: mentor ? mentor._id : null,
+  hod: hod ? hod._id : null,
+});
+
+// Create leave
+
+console.log("========== APPLY ==========");
+
+console.log({
+  event,
+  organizer,
+  eventName,
+  organizerName,
+});
+ 
+const leave = await Leave.create({
+  student: student._id,
+
+  mentor: mentor ? mentor._id : null,
+
+  hod: hod ? hod._id : null,
+
+  event,              // NEW
+  organizer,          // NEW
+
+  course: student.course,
+  department: student.department,
+  year: student.year,
+  semester: student.semester,
+  section: student.section,
+
+  eventName,
+  organizerName,
+
+  reason,
+  fromDate,
+  toDate,
+});
 
     res.status(201).json({
       success: true,
@@ -74,11 +133,19 @@ export const getMyLeaves = async (req, res) => {
 // Organizer Dashboard - Get All Pending Leaves
 export const getOrganizerLeaves = async (req, res) => {
   try {
-    const leaves = await Leave.find({
-      organizerStatus: "Pending",
-    })
-      .populate("student", "name email enrollmentNumber department semester")
-      .sort({ createdAt: -1 });
+        const leaves = await Leave.find({
+        organizer: req.user._id,
+        organizerStatus: "Pending",
+        })
+        .populate(
+          "student",
+          "name email enrollmentNumber course department year semester section"
+        )
+        .populate(
+          "event",
+          "eventName startDate endDate venue organizer"
+        )
+    .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -117,7 +184,7 @@ export const organizerDecision = async (req, res) => {
     }
 
     leave.organizerStatus = status;
-    leave.remarks = remarks || "";
+    leave.organizerRemark = remarks || "";
 
     // If organizer rejects, final status becomes rejected
     if (status === "Rejected") {
@@ -141,18 +208,17 @@ export const organizerDecision = async (req, res) => {
     });
   }
 };
-// Mentor Dashboard - Get Pending Leaves
+
 export const getMentorLeaves = async (req, res) => {
   try {
     const leaves = await Leave.find({
+      mentor: req.user._id,
       organizerStatus: "Approved",
       mentorStatus: "Pending",
-    })
-      .populate(
-        "student",
-        "name email enrollmentNumber department semester"
-      )
-      .sort({ createdAt: -1 });
+    }).populate(
+      "student",
+      "name enrollmentNumber course year semester section"
+    );
 
     res.status(200).json({
       success: true,
@@ -161,14 +227,53 @@ export const getMentorLeaves = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Mentor Dashboard Error:", error);
+    console.log(error);
 
     res.status(500).json({
       success: false,
-      message: "Internal Server Error",
+      message: "Server Error",
     });
   }
 };
+
+// Organizer Dashboard Stats
+export const getOrganizerStats = async (req, res) => {
+  try {
+    const leaves = await Leave.find({
+      organizer: req.user._id,
+    });
+
+    const pending = leaves.filter(
+      (leave) => leave.organizerStatus === "Pending"
+    ).length;
+
+    const approved = leaves.filter(
+      (leave) => leave.organizerStatus === "Approved"
+    ).length;
+
+    const rejected = leaves.filter(
+      (leave) => leave.organizerStatus === "Rejected"
+    ).length;
+
+    res.status(200).json({
+      success: true,
+      pending,
+      approved,
+      rejected,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
+
+
 // Mentor Approve / Reject Leave
 export const mentorDecision = async (req, res) => {
   try {
@@ -200,7 +305,7 @@ export const mentorDecision = async (req, res) => {
     }
 
     leave.mentorStatus = status;
-    leave.remarks = remarks || leave.remarks;
+    leave.mentorRemark = remarks || "";
 
     if (status === "Rejected") {
       leave.finalStatus = "Rejected";
@@ -224,18 +329,56 @@ export const mentorDecision = async (req, res) => {
   }
 };
 
+
+export const getMentorStats = async (req, res) => {
+  try {
+    const leaves = await Leave.find({
+      mentor: req.user._id,
+      organizerStatus: "Approved",
+    });
+
+    const pending = leaves.filter(
+      (leave) => leave.mentorStatus === "Pending"
+    ).length;
+
+    const approved = leaves.filter(
+      (leave) => leave.mentorStatus === "Approved"
+    ).length;
+
+    const rejected = leaves.filter(
+      (leave) => leave.mentorStatus === "Rejected"
+    ).length;
+
+    res.status(200).json({
+      success: true,
+      pending,
+      approved,
+      rejected,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
 // HOD Dashboard - Get Pending Leaves
 export const getHodLeaves = async (req, res) => {
   try {
     const leaves = await Leave.find({
+      hod: req.user._id,
       organizerStatus: "Approved",
       mentorStatus: "Approved",
       hodStatus: "Pending",
     })
       .populate(
-        "student",
-        "name email enrollmentNumber department semester"
-      )
+      "student",
+      "name email enrollmentNumber course department year semester section"
+    )
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -291,7 +434,7 @@ export const hodDecision = async (req, res) => {
 
     // Update HOD status
     leave.hodStatus = status;
-    leave.remarks = remarks || leave.remarks;
+    leave.hodRemark = remarks || "";
 
     // Final Status
     leave.finalStatus = status;
@@ -310,6 +453,43 @@ export const hodDecision = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
+    });
+  }
+};
+
+export const getHodStats = async (req, res) => {
+  try {
+    const leaves = await Leave.find({
+      hod: req.user._id,
+      organizerStatus: "Approved",
+      mentorStatus: "Approved",
+    });
+
+    const pending = leaves.filter(
+      (leave) => leave.hodStatus === "Pending"
+    ).length;
+
+    const approved = leaves.filter(
+      (leave) => leave.hodStatus === "Approved"
+    ).length;
+
+    const rejected = leaves.filter(
+      (leave) => leave.hodStatus === "Rejected"
+    ).length;
+
+    res.status(200).json({
+      success: true,
+      pending,
+      approved,
+      rejected,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
     });
   }
 };

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -24,11 +23,22 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["student", "organizer", "mentor", "hod"],
+      enum: ["student", "organizer", "mentor", "hod", "admin"],
       default: "student",
     },
 
+    profilePhoto: {
+      type: String,
+      default: "",
+    },
+
+    // Student Details
     enrollmentNumber: {
+      type: String,
+      default: "",
+    },
+
+    course: {
       type: String,
       default: "",
     },
@@ -38,9 +48,48 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
+    year: {
+      type: Number,
+      default: 1,
+    },
+
     semester: {
       type: Number,
       default: 1,
+    },
+
+    section: {
+      type: String,
+      default: "",
+    },
+
+    mentorCourse: {
+        type: String,
+        default: "",
+      },
+
+    mentorDepartment: {
+      type: String,
+      default: "",
+    },
+
+      mentorYear: {
+        type: Number,
+        default: null,
+      },
+
+      mentorSection: {
+        type: String,
+        default: "",
+      },
+
+    isHOD: {
+      type: Boolean,
+      default: false,
+    },
+    phone: {
+      type: String,
+      trim: true,
     },
   },
   {

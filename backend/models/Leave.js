@@ -7,6 +7,18 @@ const leaveSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    // Assigned automatically
+    mentor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+
+    hod: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
 
     eventName: {
       type: String,
@@ -14,10 +26,22 @@ const leaveSchema = new mongoose.Schema(
       trim: true,
     },
 
+    event: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
+      required: true,
+    },
+
     organizerName: {
       type: String,
       required: true,
       trim: true,
+    },
+
+    organizer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
 
     reason: {
@@ -64,7 +88,22 @@ const leaveSchema = new mongoose.Schema(
       default: "Pending",
     },
 
-    remarks: {
+    // remarks: {
+    //   type: String,
+    //   default: "",
+    // },
+
+    organizerRemark: {
+      type: String,
+      default: "",
+    },
+
+    mentorRemark: {
+      type: String,
+      default: "",
+    },
+
+    hodRemark: {
       type: String,
       default: "",
     },

@@ -1,94 +1,154 @@
-// 
-// import DashboardLayout from "../layouts/DashboardLayout";
-
-// function ApplyLeave() {
-//   return (
-//     <DashboardLayout>
-//       <h2>Apply Leave</h2>
-//     </DashboardLayout>
-//   );
-// }
-
 // export default ApplyLeave;
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import { toast, ToastContainer } from "react-toastify";
+import API from "../api/axios";
+import { getStudentEvents } from "../api/eventApi";
 
 function ApplyLeave() {
   const [formData, setFormData] = useState({
-    studentName: "",
-    enrollmentNo: "",
-    department: "",
-    semester: "",
-    eventName: "",
-    organizerName: "",
-    leaveFrom: "",
-    leaveTo: "",
-    reason: "",
-    proof: null,
+      studentName: "",
+      enrollmentNo: "",
+      course: "",
+      year: "",
+      section: "",
+      semester: "",
+
+      event: "",
+      eventName: "",
+
+      organizer: "",      
+      organizerId: "",    
+
+      leaveFrom: "",
+      leaveTo: "",
+      reason: "",
+      proof: null,
+      });
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        studentName: user.name || "",
+        enrollmentNo: user.enrollmentNumber || "",
+        course: user.course || "",
+        year: user.year || "",
+        section: user.section || "",
+        semester: user.semester || "",
+      }));
+    }
+  }, []);
+
+
+const handleChange = (e) => {
+
+  const { name, value } = e.target;
+
+  if (name === "event") {
+
+    const selectedEvent = events.find(
+      (event) => event._id === value
+    );
+
+    setFormData({
+      ...formData,
+      event: value,
+      eventName: selectedEvent?.eventName || "",
+      organizer: selectedEvent?.organizer?.name || "",
+      organizerId: selectedEvent?.organizer?._id || "",
+    });
+
+    return;
+  }
+
+  setFormData({
+    ...formData,
+    [name]: value,
   });
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
+};
 
-    if (name === "proof") {
-      setFormData({
-        ...formData,
-        proof: files[0],
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
-      !formData.studentName ||
-      !formData.enrollmentNo ||
-      !formData.department ||
-      !formData.semester ||
-      !formData.eventName ||
-      !formData.organizerName ||
-      !formData.leaveFrom ||
-      !formData.leaveTo ||
-      !formData.reason
+        !formData.event ||
+        !formData.leaveFrom ||
+        !formData.leaveTo ||
+        !formData.reason
     ) {
       toast.error("Please fill all required fields");
       return;
     }
 
-    toast.success("Leave Application Submitted Successfully!");
+    try {
+      const response = await API.post("/leave/apply", {
+      event: formData.event,
+      organizer: formData.organizerId,
 
-    console.log(formData);
+      eventName: formData.eventName,
+      organizer: formData.organizerId,
+      organizerName: formData.organizer,
 
-    setFormData({
-      studentName: "",
-      enrollmentNo: "",
-      department: "",
-      semester: "",
-      eventName: "",
-      organizerName: "",
-      leaveFrom: "",
-      leaveTo: "",
-      reason: "",
-      proof: null,
+      fromDate: formData.leaveFrom,
+      toDate: formData.leaveTo,
+      reason: formData.reason,
     });
 
-    document.getElementById("proof").value = "";
+      toast.success(response.data.message);
+
+      setFormData((prev) => ({
+          event: "",
+          organizerId: "",
+          eventName: "",
+          organizer: "",
+          leaveFrom: "",
+          leaveTo: "",
+          reason: "",
+          proof: null,
+      }));
+
+      document.getElementById("proof").value = "";
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to apply leave"
+      );
+    }
   };
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+  fetchEvents();
+}, []);
+
+const fetchEvents = async () => {
+  try {
+
+    const res = await getStudentEvents();
+
+    setEvents(res.data.data);
+
+  } catch (error) {
+
+    console.log(error);
+
+    toast.error("Failed to load events");
+
+  }
+};
+
+console.log("Events State:", events);
 
   return (
     <DashboardLayout>
       <ToastContainer />
 
       <div className="card shadow border-0">
+
         <div className="card-header bg-primary text-white">
-          <h4 className="mb-0">Apply for Duty Leave</h4>
+          <h4 className="mb-0">Apply Duty Leave</h4>
         </div>
 
         <div className="card-body">
@@ -97,107 +157,142 @@ function ApplyLeave() {
 
             <div className="row">
 
-              <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-                <label className="form-label">Student Name</label>
+              <div className="col-md-6 mb-3">
+                <label>Student Name</label>
                 <input
                   type="text"
                   className="form-control"
-                  name="studentName"
                   value={formData.studentName}
-                  onChange={handleChange}
+                  readOnly
                 />
               </div>
 
-              <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-                <label className="form-label">Enrollment Number</label>
+              <div className="col-md-6 mb-3">
+                <label>Enrollment Number</label>
                 <input
                   type="text"
                   className="form-control"
-                  name="enrollmentNo"
                   value={formData.enrollmentNo}
-                  onChange={handleChange}
+                  readOnly
                 />
               </div>
 
-              <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-                <label className="form-label">Department</label>
+              <div className="col-md-6 mb-3">
+                <label>Course</label>
                 <input
                   type="text"
                   className="form-control"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
+                  value={formData.course}
+                  readOnly
                 />
               </div>
 
-              <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-                <label className="form-label">Semester</label>
+              <div className="col-md-6 mb-3">
+                <label>Year</label>
                 <input
                   type="text"
                   className="form-control"
-                  name="semester"
+                  value={formData.year}
+                  readOnly
+                />
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <label>Section</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.section}
+                  readOnly
+                />
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <label>Semester</label>
+                <input
+                  type="text"
+                  className="form-control"
                   value={formData.semester}
-                  onChange={handleChange}
+                  readOnly
                 />
               </div>
 
-              <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-                <label className="form-label">Event Name</label>
-                <input
+              <div className="col-md-6 mb-3">
+                <label className="form-label">
+                  Event
+                </label>
+
+                <select
+                  className="form-select"
+                  name="event"
+                  value={formData.event}
+                  onChange={handleChange}
+                >
+                  <option value="">
+                    Select Event
+                  </option>
+
+                  {events.map((event) => (
+                    <option
+                      key={event._id}
+                      value={event._id}
+                    >
+                      {event.eventName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="col-md-6 mb-3">
+              <label className="form-label">
+              Organizer
+              </label>
+              <input
                   type="text"
                   className="form-control"
-                  name="eventName"
-                  value={formData.eventName}
-                  onChange={handleChange}
-                />
+                  value={formData.organizer}
+                  readOnly
+              />
               </div>
 
-              <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-                <label className="form-label">Organizer Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="organizerName"
-                  value={formData.organizerName}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-                <label className="form-label">Leave From</label>
+              <div className="col-md-6 mb-3">
+                <label>Leave From</label>
                 <input
                   type="date"
                   className="form-control"
                   name="leaveFrom"
                   value={formData.leaveFrom}
                   onChange={handleChange}
+                  required
                 />
               </div>
 
-              <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-                <label className="form-label">Leave To</label>
+              <div className="col-md-6 mb-3">
+                <label>Leave To</label>
                 <input
                   type="date"
                   className="form-control"
                   name="leaveTo"
                   value={formData.leaveTo}
                   onChange={handleChange}
+                  required
                 />
               </div>
 
               <div className="col-12 mb-3">
-                <label className="form-label">Reason</label>
+                <label>Reason</label>
                 <textarea
                   className="form-control"
                   rows="4"
                   name="reason"
                   value={formData.reason}
                   onChange={handleChange}
-                ></textarea>
+                  required
+                />
               </div>
 
               <div className="col-12 mb-4">
-                <label className="form-label">Upload Proof</label>
+                <label>Upload Proof (Optional)</label>
                 <input
                   type="file"
                   id="proof"
@@ -210,29 +305,17 @@ function ApplyLeave() {
 
             </div>
 
-            <div className="d-flex gap-3">
-
-              <button
-                type="submit"
-                className="btn btn-primary"
-              >
-                Submit Application
-              </button>
-
-              <button
-                type="reset"
-                className="btn btn-secondary"
-              >
-                Reset
-              </button>
-
-            </div>
+            <button
+              type="submit"
+              className="btn btn-primary"
+            >
+              Apply Leave
+            </button>
 
           </form>
 
         </div>
       </div>
-
     </DashboardLayout>
   );
 }

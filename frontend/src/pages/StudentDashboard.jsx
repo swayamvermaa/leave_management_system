@@ -1,29 +1,70 @@
-// import DashboardLayout from "../layouts/DashboardLayout";
-
-// function StudentDashboard() {
-//   return (
-//     <DashboardLayout>
-
-//       <h2 className="fw-bold">
-//         Student Dashboard
-//       </h2>
-
-//       <p className="text-muted">
-//         Welcome to the Campus Duty Leave Management System.
-//       </p>
-
-//     </DashboardLayout>
-//   );
-// }
-
-// export default StudentDashboard;
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../layouts/DashboardLayout";
-import { FaFileAlt, FaClock, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import API from "../api/axios";
+import { getStudentEvents } from "../api/eventApi";
+
+import {
+  FaFileAlt,
+  FaClock,
+  FaCheckCircle,
+  FaTimesCircle,
+} from "react-icons/fa";
 
 function StudentDashboard() {
+  const navigate = useNavigate();
+
+  const [leaves, setLeaves] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchLeaves = async () => {
+    try {
+      const res = await API.get("/leave/my-leaves");
+
+      setLeaves(res.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeaves();
+  }, []);
+
+  const total = leaves.length;
+
+  const pending = leaves.filter(
+    (leave) => leave.finalStatus === "Pending"
+  ).length;
+
+  const approved = leaves.filter(
+    (leave) => leave.finalStatus === "Approved"
+  ).length;
+
+  const rejected = leaves.filter(
+    (leave) => leave.finalStatus === "Rejected"
+  ).length;
+
+  useEffect(() => {
+  loadEvents();
+}, []);
+
+const loadEvents = async () => {
+  try {
+    const res = await getStudentEvents();
+
+    console.log("Student Events =>", res.data);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
   return (
     <DashboardLayout>
-      {/* Page Heading */}
+
       <div className="mb-4">
         <h2 className="fw-bold">Student Dashboard</h2>
         <p className="text-muted">
@@ -31,15 +72,14 @@ function StudentDashboard() {
         </p>
       </div>
 
-      {/* Statistics Cards */}
       <div className="row g-4">
 
         <div className="col-md-3">
           <div className="card shadow-sm border-0">
             <div className="card-body text-center">
               <FaFileAlt className="text-primary fs-1 mb-3" />
-              <h3>12</h3>
-              <p className="text-muted mb-0">Total Leaves</p>
+              <h3>{total}</h3>
+              <p>Total Leaves</p>
             </div>
           </div>
         </div>
@@ -48,8 +88,8 @@ function StudentDashboard() {
           <div className="card shadow-sm border-0">
             <div className="card-body text-center">
               <FaClock className="text-warning fs-1 mb-3" />
-              <h3>3</h3>
-              <p className="text-muted mb-0">Pending</p>
+              <h3>{pending}</h3>
+              <p>Pending</p>
             </div>
           </div>
         </div>
@@ -58,100 +98,115 @@ function StudentDashboard() {
           <div className="card shadow-sm border-0">
             <div className="card-body text-center">
               <FaCheckCircle className="text-success fs-1 mb-3" />
-              <h3>8</h3>
-              <p className="text-muted mb-0">Approved</p>
+              <h3>{approved}</h3>
+              <p>Approved</p>
             </div>
           </div>
         </div>
 
         <div className="col-md-3">
-          <div className="card shadow border-0 h-100">
+          <div className="card shadow-sm border-0">
             <div className="card-body text-center">
               <FaTimesCircle className="text-danger fs-1 mb-3" />
-              <h3>1</h3>
-              <p className="text-muted mb-0">Rejected</p>
+              <h3>{rejected}</h3>
+              <p>Rejected</p>
             </div>
           </div>
         </div>
 
       </div>
 
-      {/* Recent Leave Requests */}
       <div className="card shadow-sm mt-5 border-0">
 
         <div className="card-header bg-primary text-white">
-          <h5 className="mb-0">Recent Leave Requests</h5>
+          <h5 className="mb-0">
+            Recent Leave Requests
+          </h5>
         </div>
 
         <div className="card-body">
 
-          <div className="table-responsive">
+          {loading ? (
+            <h5 className="text-center">Loading...</h5>
+          ) : (
+            <div className="table-responsive">
 
-            <table className="table table-bordered table-hover align-middle">
+              <table className="table table-bordered">
 
-              <thead className="table-light">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Event</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
 
-                <tr>
-                  <th>#</th>
-                  <th>Event</th>
-                  <th>From</th>
-                  <th>To</th>
-                  <th>Status</th>
-                </tr>
+                <tbody>
 
-              </thead>
+                  {leaves.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        No Leave Applications Found
+                      </td>
+                    </tr>
+                  ) : (
+                    leaves.map((leave, index) => (
+                      <tr key={leave._id}>
 
-              <tbody>
+                        <td>{index + 1}</td>
 
-                <tr>
-                  <td>1</td>
-                  <td>Tech Fest</td>
-                  <td>20/06/2026</td>
-                  <td>22/06/2026</td>
-                  <td>
-                    <span className="badge bg-warning">
-                      Pending
-                    </span>
-                  </td>
-                </tr>
+                        <td>{leave.eventName}</td>
 
-                <tr>
-                  <td>2</td>
-                  <td>Hackathon</td>
-                  <td>10/06/2026</td>
-                  <td>12/06/2026</td>
-                  <td>
-                    <span className="badge bg-success">
-                      Approved
-                    </span>
-                  </td>
-                </tr>
+                        <td>
+                          {new Date(
+                            leave.fromDate
+                          ).toLocaleDateString()}
+                        </td>
 
-                <tr>
-                  <td>3</td>
-                  <td>Workshop</td>
-                  <td>01/06/2026</td>
-                  <td>02/06/2026</td>
-                  <td>
-                    <span className="badge bg-danger">
-                      Rejected
-                    </span>
-                  </td>
-                </tr>
+                        <td>
+                          {new Date(
+                            leave.toDate
+                          ).toLocaleDateString()}
+                        </td>
 
-              </tbody>
+                        <td>
 
-            </table>
+                          <span
+                            className={`badge ${
+                              leave.finalStatus === "Approved"
+                                ? "bg-success"
+                                : leave.finalStatus === "Rejected"
+                                ? "bg-danger"
+                                : "bg-warning"
+                            }`}
+                          >
+                            {leave.finalStatus}
+                          </span>
 
-          </div>
+                        </td>
+
+                      </tr>
+                    ))
+                  )}
+
+                </tbody>
+
+              </table>
+
+            </div>
+          )}
 
         </div>
 
       </div>
 
-      {/* Quick Action */}
       <div className="mt-4">
-        <button className="btn btn-primary">
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate("/apply-leave")}
+        >
           Apply New Leave
         </button>
       </div>

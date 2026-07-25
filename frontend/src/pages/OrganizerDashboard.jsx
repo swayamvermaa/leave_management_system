@@ -1,12 +1,57 @@
+import { useEffect, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import OrganizerLeaveTable from "../components/OrganizerLeaveTable";
 import {
   FaClock,
   FaCheckCircle,
   FaTimesCircle,
-} from "react-icons/fa";
+} from "react-icons/fa"; 
+import {
+  getOrganizerLeaves,
+  getOrganizerStats,
+} from "../api/organizerApi";
 
 function OrganizerDashboard() {
+  const [leaves, setLeaves] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+  pending: 0,
+  approved: 0,
+  rejected: 0,
+});
+useEffect(() => {
+  fetchLeaves();
+  fetchStats();
+}, []);
+
+  // temporary fetchLeaves function for debugging
+  const fetchLeaves = async () => {
+  try {
+    const response = await getOrganizerLeaves();
+
+    setLeaves(response.data.data);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const fetchStats = async () => {
+    try {
+      const response = await getOrganizerStats();
+
+      setStats({
+        pending: response.data.pending,
+        approved: response.data.approved,
+        rejected: response.data.rejected,
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <DashboardLayout>
 
@@ -26,7 +71,7 @@ function OrganizerDashboard() {
 
               <FaClock className="fs-1 text-warning mb-3"/>
 
-              <h3>18</h3>
+              <h3>{stats.pending}</h3>
 
               <p className="mb-0">
                 Pending Requests
@@ -42,7 +87,7 @@ function OrganizerDashboard() {
 
               <FaCheckCircle className="fs-1 text-success mb-3"/>
 
-              <h3>40</h3>
+              <h3>{stats.approved}</h3>
 
               <p className="mb-0">
                 Approved
@@ -58,7 +103,7 @@ function OrganizerDashboard() {
 
               <FaTimesCircle className="fs-1 text-danger mb-3"/>
 
-              <h3>5</h3>
+              <h3>{stats.rejected}</h3>
 
               <p className="mb-0">
                 Rejected
@@ -70,10 +115,21 @@ function OrganizerDashboard() {
 
       </div>
 
-      <OrganizerLeaveTable />
+    {loading ? (
+  <div className="text-center mt-5">
+    <h5>Loading...</h5>
+  </div>
+) : (
+  <OrganizerLeaveTable
+    leaves={leaves}
+    fetchLeaves={fetchLeaves}
+    fetchStats={fetchStats}
+  />
+)}
 
     </DashboardLayout>
   );
+  
 }
 
 export default OrganizerDashboard;

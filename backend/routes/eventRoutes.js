@@ -1,0 +1,45 @@
+import express from "express";
+import {
+  createEvent,
+  getEvents,
+  getStudentEvents,
+  updateEvent,
+  deleteEvent,
+} from "../controllers/eventController.js";
+
+import { protect, authorize } from "../middleware/authMiddleware.js";
+
+const router = express.Router();
+
+router.get("/", protect, getEvents);
+
+router.post(
+  "/",
+  protect,
+  authorize("admin"),
+  createEvent
+);
+
+router.put(
+  "/:id",
+  protect,
+  authorize("admin"),
+  updateEvent
+);
+
+router.delete(
+  "/:id",
+  protect,
+  authorize("admin"),
+  deleteEvent
+);
+
+router.get(
+  "/student",
+  protect,
+  authorize("student"),
+  getStudentEvents
+);
+
+
+export default router;

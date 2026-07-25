@@ -1,34 +1,17 @@
-// function Navbar() {
-//   return (
-//     <nav className="navbar navbar-expand-lg bg-white shadow-sm px-4">
-//       <div className="container-fluid">
-
-//         <h4 className="mb-0 fw-bold text-primary">
-//           Campus Duty Leave Management
-//         </h4>
-
-//         <div className="d-flex align-items-center">
-
-//           <span className="me-3 fw-semibold">
-//             Welcome, Student
-//           </span>
-
-//           <button className="btn btn-outline-danger btn-sm">
-//             Logout
-//           </button>
-
-//         </div>
-
-//       </div>
-//     </nav>
-//   );
-// }
-
-// export default Navbar;
-
 import { FaBell, FaUserCircle } from "react-icons/fa";
 
+import { useNavigate } from "react-router-dom";
+const user = JSON.parse(localStorage.getItem("user"));
+
 function Navbar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
     <nav className="navbar navbar-expand-lg bg-white shadow-sm px-4">
 
@@ -64,16 +47,20 @@ function Navbar() {
             />
 
             <div>
-              <h6 className="mb-0">Swayam Verma</h6>
-              <small className="text-muted">
-                Student
-              </small>
+              <h6 className="mb-0">
+                  {user?.name}
+                </h6>
+
+                <small className="text-muted text-capitalize">
+                  {user?.role}
+                </small>
             </div>
 
           </div>
 
           {/* Logout */}
-          <button className="btn btn-outline-danger">
+          <button className="btn btn-danger btn-sm"
+            onClick={handleLogout}>
             Logout
           </button>
 

@@ -1,61 +1,38 @@
-// function LeaveHistory() {
-//   return <h2>Leave History Page</h2>;
-// }
-
-// export default LeaveHistory;
-// import DashboardLayout from "../layouts/DashboardLayout";
-
-// function LeaveHistory() {
-//   return (
-//     <DashboardLayout>
-//       <h2>Leave History</h2>
-//     </DashboardLayout>
-//   );
-// }
-
-// export default LeaveHistory;
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
+import API from "../api/axios";
+import { toast } from "react-toastify";
 
 function LeaveHistory() {
   const [search, setSearch] = useState("");
+  const [leaveData, setLeaveData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("All");
+  
+  useEffect(() => {
+    fetchLeaves();
+  }, []);
 
-  const leaveData = [
-    {
-      id: 1,
-      event: "Tech Fest",
-      from: "20/06/2026",
-      to: "22/06/2026",
-      status: "Pending",
-      proof: "proof1.pdf",
-    },
-    {
-      id: 2,
-      event: "Hackathon",
-      from: "10/06/2026",
-      to: "12/06/2026",
-      status: "Approved",
-      proof: "proof2.pdf",
-    },
-    {
-      id: 3,
-      event: "Workshop",
-      from: "01/06/2026",
-      to: "02/06/2026",
-      status: "Rejected",
-      proof: "proof3.pdf",
-    },
-  ];
+  const fetchLeaves = async () => {
+    try {
+      const response = await API.get("/leave/my-leaves");
+
+      setLeaveData(response.data.data);
+
+    } catch (error) {
+      toast.error("Failed to fetch leave history");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredLeaves = leaveData.filter((leave) => {
-    const matchesSearch = leave.event
+    const matchesSearch = leave.eventName
       .toLowerCase()
       .includes(search.toLowerCase());
 
     const matchesStatus =
-      statusFilter === "All" || leave.status === statusFilter;
+      statusFilter === "All" || leave.finalStatus === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
@@ -109,6 +86,7 @@ function LeaveHistory() {
 
           </div>
 
+          {loading && <p>Loading...</p>}
           {/* Table */}
           <div className="table-responsive">
 
@@ -129,27 +107,111 @@ function LeaveHistory() {
 
                 {filteredLeaves.length > 0 ? (
                   filteredLeaves.map((leave) => (
-                    <tr key={leave.id}>
-                      <td>{leave.id}</td>
-                      <td>{leave.event}</td>
-                      <td>{leave.from}</td>
-                      <td>{leave.to}</td>
+                    <tr key={leave._id.slice(-6)}>
+                      <td>{leave._id.slice(-6)}</td>
+                      <td>{leave.eventName}</td>
+                      <td>{new Date(leave.fromDate).toLocaleDateString()}</td>
+                      <td>{new Date(leave.toDate).toLocaleDateString()}</td>
 
-                      <td>
-                        <span
-                          className={`badge bg-${getBadge(
-                            leave.status
-                          )}`}
-                        >
-                          {leave.status}
-                        </span>
+                      <td style={{ minWidth: "250px" }}>
+
+                        <div className="mb-2">
+
+                          <strong>Organizer :</strong>
+
+                          <span
+                            className={`badge ms-2 bg-${getBadge(
+                              leave.organizerStatus
+                            )}`}
+                          >
+                            {leave.organizerStatus}
+                          </span>
+
+                        </div>
+
+                        {leave.organizerRemark && (
+                          <small className="text-muted d-block mb-2">
+                            <strong>Remark:</strong>{" "}
+                            {leave.organizerRemark}
+                          </small>
+                        )}
+
+                        <div className="mb-2">
+
+                          <strong>Mentor :</strong>
+
+                          <span
+                            className={`badge ms-2 bg-${getBadge(
+                              leave.mentorStatus
+                            )}`}
+                          >
+                            {leave.mentorStatus}
+                          </span>
+
+                        </div>
+
+                        {leave.mentorRemark && (
+                          <small className="text-muted d-block mb-2">
+                            <strong>Remark:</strong>{" "}
+                            {leave.mentorRemark}
+                          </small>
+                        )}
+
+                        <div className="mb-2">
+
+                          <strong>HOD :</strong>
+
+                          <span
+                            className={`badge ms-2 bg-${getBadge(
+                              leave.hodStatus
+                            )}`}
+                          >
+                            {leave.hodStatus}
+                          </span>
+
+                        </div>
+
+                        {leave.hodRemark && (
+                          <small className="text-muted d-block mb-2">
+                            <strong>Remark:</strong>{" "}
+                            {leave.hodRemark}
+                          </small>
+                        )}
+
+                        <hr />
+
+                        <div>
+
+                          <strong>Final :</strong>
+
+                          <span
+                            className={`badge ms-2 bg-${getBadge(
+                              leave.finalStatus
+                            )}`}
+                          >
+                            {leave.finalStatus}
+                          </span>
+
+                        </div>
+
                       </td>
 
                       <td>
-                        <button className="btn btn-sm btn-outline-primary">
-                          View Proof
-                        </button>
-                      </td>
+                          {leave.proof ? (
+                            <a
+                              href={leave.proof}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="btn btn-sm btn-primary"
+                            >
+                              View
+                            </a>
+                          ) : (
+                            <span className="text-muted">
+                              Not Uploaded
+                            </span>
+                          )}
+                        </td>
                     </tr>
                   ))
                 ) : (
