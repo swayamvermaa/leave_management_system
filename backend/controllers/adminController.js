@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import Leave from "../models/Leave.js";
+import admin from "../config/firebaseAdmin.js";
 
 // Dashboard Statistics
 export const getDashboardStats = async (req, res) => {
@@ -55,13 +56,13 @@ export const getAllUsers = async (req, res) => {
 import bcrypt from "bcryptjs";
 
 // Create User
-// Create User
 export const createUser = async (req, res) => {
   try {
     const {
       name,
       email,
       password,
+      phone,
       role,
       enrollmentNumber,
       course,
@@ -75,6 +76,27 @@ export const createUser = async (req, res) => {
       mentorSemester,
       mentorSection,
     } = req.body;
+
+
+    if (!phone || !/^\d{10}$/.test(phone)) {
+        return res.status(400).json({
+          success: false,
+          message: "Phone number must be exactly 10 digits.",
+        });
+      }
+
+      if (role === "student") {
+        if (
+          !enrollmentNumber ||
+          !/^\d{10}$/.test(enrollmentNumber)
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: "Enrollment number must be exactly 10 digits.",
+          });
+        }
+      }
+
 
     const existingUser = await User.findOne({ email });
 
@@ -91,7 +113,7 @@ export const createUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-
+      phone,
       role,
 
       enrollmentNumber,
@@ -205,10 +227,10 @@ export const updateUser = async (req, res) => {
 
   }
 };
+
 // Delete User
 export const deleteUser = async (req, res) => {
   try {
-
     const { id } = req.params;
 
     const user = await User.findById(id);
@@ -230,10 +252,25 @@ export const deleteUser = async (req, res) => {
 
     // Delete from Firebase Authentication
     try {
-      const firebaseUser = await admin.auth().getUserByEmail(user.email);
-      await admin.auth().deleteUser(firebaseUser.uid);
+        const firebaseUser = await admin.getUserByEmail(user.email);
+
+        await admin.deleteUser(firebaseUser.uid);
+
+      console.log(
+        `Firebase user deleted: ${user.email}`
+      );
+
     } catch (err) {
-      console.log("Firebase user not found:", err.message);
+      // Firebase user doesn't exist
+      if (err.code === "auth/user-not-found") {
+        console.log(
+          `Firebase user not found: ${user.email}`
+        );
+      } else {
+        // IMPORTANT: Firebase deletion failed
+        // so don't delete MongoDB user
+        throw err;
+      }
     }
 
     // Delete from MongoDB
@@ -241,20 +278,19 @@ export const deleteUser = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "User deleted successfully",
+      message: "User deleted successfully from Firebase and MongoDB",
     });
 
   } catch (error) {
-
-    console.log(error);
+    console.error("Delete User Error:", error);
 
     res.status(500).json({
       success: false,
       message: "Server Error",
     });
-
   }
 };
+
 // Get Admin Profile
 export const getAdminProfile = async (req, res) => {
   try {

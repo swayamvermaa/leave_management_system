@@ -42,6 +42,28 @@ export const registerUser = async (req, res) => {
       });
     }
 
+
+    // Validate phone number
+    if (!phone || !/^\d{10}$/.test(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Phone number must be exactly 10 digits.",
+      });
+    }
+
+    // Validate enrollment number for student
+    if (role === "student") {
+      if (
+        !enrollmentNumber ||
+        !/^\d{10}$/.test(enrollmentNumber)
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Enrollment number must be exactly 10 digits.",
+        });
+      }
+    }
+
     // Check if user already exists
     const existingUser = await User.findOne({ email });
 

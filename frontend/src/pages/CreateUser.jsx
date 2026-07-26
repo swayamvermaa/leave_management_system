@@ -15,7 +15,7 @@ function CreateUser() {
     name: "",
     email: "",
     password: "",
-
+    phone: "",
     role: "student",
 
     enrollmentNumber: "",
@@ -43,6 +43,19 @@ function CreateUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.phone || formData.phone.length !== 10) {
+    toast.error("Phone number must be exactly 10 digits");
+    return;
+  }
+
+  if (
+    formData.role === "student" &&
+    formData.enrollmentNumber.length !== 10
+  ) {
+    toast.error("Enrollment number must be exactly 10 digits");
+    return;
+  }
+
     try {
       const response = await createUser(formData);
 
@@ -52,6 +65,7 @@ function CreateUser() {
         name: "",
         email: "",
         password: "",
+        phone: "",
 
         role: "student",
 
@@ -119,6 +133,36 @@ function CreateUser() {
                 onChange={handleChange}
               />
             </div>
+
+            {/* Phone Number */}
+
+              <div className="col-md-6 mb-3">
+                <label>Phone Number</label>
+
+                <input
+                  type="tel"
+                  className="form-control"
+                  name="phone"
+                  value={formData.phone}
+                  placeholder="Enter 10 digit phone number"
+                  maxLength={10}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+
+                    setFormData({
+                      ...formData,
+                      phone: value,
+                    });
+                  }}
+                />
+
+                {formData.phone.length > 0 &&
+                  formData.phone.length !== 10 && (
+                    <small className="text-danger">
+                      Phone number must be exactly 10 digits
+                    </small>
+                  )}
+              </div>
 
             {/* Password */}
 
