@@ -13,6 +13,7 @@ import CreateUser from "./pages/CreateUser";
 import ManageEvents from "./pages/ManageEvents";
 import Profile from "./pages/Profile";
 import AdminProfile from "./pages/AdminProfile";
+import ApprovedLeave from "./pages/ApprovedLeave";
 
 
 
@@ -34,6 +35,11 @@ function App() {
       <Route
         path="/leave-history"
         element={<LeaveHistory />}
+      />
+
+      <Route
+        path="/approved-leaves"
+        element={<ApprovedLeave />}
       />
 
         <Route

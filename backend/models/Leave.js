@@ -31,6 +31,30 @@ const leaveSchema = new mongoose.Schema(
       ref: "Event",
       required: true,
     },
+    course: {
+        type: String,
+        default: "",
+      },
+
+      department: {
+        type: String,
+        default: "",
+      },
+
+      year: {
+        type: Number,
+        default: null,
+      },
+
+      semester: {
+        type: Number,
+        default: null,
+      },
+
+      section: {
+        type: String,
+        default: "",
+      },
 
     organizerName: {
       type: String,
@@ -88,25 +112,35 @@ const leaveSchema = new mongoose.Schema(
       default: "Pending",
     },
 
-    // remarks: {
-    //   type: String,
-    //   default: "",
-    // },
-
     organizerRemark: {
       type: String,
       default: "",
     },
+        organizerDecisionAt: {
+        type: Date,
+        default: null,
+      },
+
 
     mentorRemark: {
       type: String,
       default: "",
     },
 
+          mentorDecisionAt: {
+        type: Date,
+        default: null,
+      },
+
     hodRemark: {
       type: String,
       default: "",
     },
+
+      hodDecisionAt: {
+        type: Date,
+        default: null,
+      },
   },
   {
     timestamps: true,

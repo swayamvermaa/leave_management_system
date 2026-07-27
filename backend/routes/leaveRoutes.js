@@ -15,6 +15,7 @@ import {
   getOrganizerStats,
   getMentorStats,
   getHodStats,
+  getApprovedMyLeaves,
 } from "../controllers/leaveController.js";
 
 const router = express.Router();
@@ -22,6 +23,12 @@ const router = express.Router();
 // Student Apply Leave
 router.post("/apply", protect, applyLeave);
 router.get("/my-leaves", protect, getMyLeaves);
+
+router.get(
+  "/my-approved-leaves",
+  protect,
+  getApprovedMyLeaves
+);
 
 router.get(
   "/organizer",

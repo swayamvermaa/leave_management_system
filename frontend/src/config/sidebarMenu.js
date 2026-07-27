@@ -6,6 +6,7 @@ import {
   FaUserPlus,
   FaUserCircle,
   FaCalendarAlt,
+  FaCheckCircle,
 } from "react-icons/fa";
 
 export const sidebarMenus = {
@@ -29,6 +30,11 @@ export const sidebarMenus = {
       name: "Profile",
       path: "/profile",
       icon: FaUsers,
+    },
+    {
+      name: "Approved Leaves",
+      path: "/approved-leaves",
+      icon: FaCheckCircle,
     },
   ],
 

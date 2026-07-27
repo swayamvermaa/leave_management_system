@@ -185,6 +185,7 @@ export const organizerDecision = async (req, res) => {
 
     leave.organizerStatus = status;
     leave.organizerRemark = remarks || "";
+    leave.organizerDecisionAt = new Date();
 
     // If organizer rejects, final status becomes rejected
     if (status === "Rejected") {
@@ -306,6 +307,7 @@ export const mentorDecision = async (req, res) => {
 
     leave.mentorStatus = status;
     leave.mentorRemark = remarks || "";
+    leave.mentorDecisionAt = new Date();
 
     if (status === "Rejected") {
       leave.finalStatus = "Rejected";
@@ -435,6 +437,7 @@ export const hodDecision = async (req, res) => {
     // Update HOD status
     leave.hodStatus = status;
     leave.hodRemark = remarks || "";
+    leave.hodDecisionAt = new Date();
 
     // Final Status
     leave.finalStatus = status;
@@ -490,6 +493,50 @@ export const getHodStats = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server Error",
+    });
+  }
+};
+// Get Fully Approved Leaves for Student
+export const getApprovedMyLeaves = async (req, res) => {
+  try {
+    const leaves = await Leave.find({
+      student: req.user._id,
+      finalStatus: "Approved",
+    })
+      .populate(
+        "student",
+        "name email enrollmentNumber course department year semester section phone"
+      )
+      .populate(
+        "organizer",
+        "name email"
+      )
+      .populate(
+        "mentor",
+        "name email"
+      )
+      .populate(
+        "hod",
+        "name email"
+      )
+      .populate(
+        "event",
+        "eventName startDate endDate venue course year section"
+      )
+      .sort({ hodDecisionAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: leaves.length,
+      data: leaves,
+    });
+
+  } catch (error) {
+    console.error("Get Approved Leaves Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
     });
   }
 };
