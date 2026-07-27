@@ -5,6 +5,8 @@ import {
   getStudentEvents,
   updateEvent,
   deleteEvent,
+  getUpcomingEvents,
+  getLatestEvents,
 } from "../controllers/eventController.js";
 
 import { protect, authorize } from "../middleware/authMiddleware.js";
@@ -40,6 +42,10 @@ router.get(
   authorize("student"),
   getStudentEvents
 );
+
+router.get("/upcoming", getUpcomingEvents);
+
+router.get("/latest", getLatestEvents);
 
 
 export default router;

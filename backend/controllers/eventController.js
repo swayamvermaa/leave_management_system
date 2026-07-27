@@ -179,3 +179,60 @@ export const getStudentEvents = async (req, res) => {
 
   }
 };
+
+// Get Latest Events
+export const getLatestEvents = async (req, res) => {
+  try {
+
+    const events = await Event.find({
+      isActive: true,
+    })
+      .populate("organizer", "name email")
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    res.status(200).json({
+      success: true,
+      count: events.length,
+      data: events,
+    });
+
+  } catch (error) {
+
+    console.log("Latest Events Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
+// Get Upcoming Events for Notification
+export const getUpcomingEvents = async (req, res) => {
+  try {
+    const today = new Date();
+
+    const events = await Event.find({
+      startDate: { $gte: today },
+      isActive: true,
+      status: "Active",
+    })
+      .populate("organizer", "name email")
+      .sort({ startDate: 1 });
+
+    res.status(200).json({
+      success: true,
+      count: events.length,
+      data: events,
+    });
+
+  } catch (error) {
+    console.log("Upcoming Events Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};

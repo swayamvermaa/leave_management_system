@@ -39,7 +39,7 @@ const eventSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-  
+    
     venue: {
       type: String,
       trim: true,
@@ -72,11 +72,6 @@ const eventSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-    },
-
-    description: {
-        type: String,
-        default: "",
     },
   },
   {

@@ -44,31 +44,37 @@ function ApplyLeave() {
 
 
 const handleChange = (e) => {
-
   const { name, value } = e.target;
 
   if (name === "event") {
-
     const selectedEvent = events.find(
       (event) => event._id === value
     );
 
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       event: value,
       eventName: selectedEvent?.eventName || "",
       organizer: selectedEvent?.organizer?.name || "",
       organizerId: selectedEvent?.organizer?._id || "",
-    });
+
+      // Event ki dates automatically fill hongi
+      leaveFrom: selectedEvent?.startDate
+        ? selectedEvent.startDate.split("T")[0]
+        : "",
+
+      leaveTo: selectedEvent?.endDate
+        ? selectedEvent.endDate.split("T")[0]
+        : "",
+    }));
 
     return;
   }
 
-  setFormData({
-    ...formData,
+  setFormData((prev) => ({
+    ...prev,
     [name]: value,
-  });
-
+  }));
 };
 
   const handleSubmit = async (e) => {
@@ -263,6 +269,7 @@ console.log("Events State:", events);
                   name="leaveFrom"
                   value={formData.leaveFrom}
                   onChange={handleChange}
+                  readOnly
                   required
                 />
               </div>
@@ -275,6 +282,7 @@ console.log("Events State:", events);
                   name="leaveTo"
                   value={formData.leaveTo}
                   onChange={handleChange}
+                  readOnly
                   required
                 />
               </div>

@@ -21,3 +21,11 @@ export const getOrganizers = () =>
 
 export const getStudentEvents = () =>
   API.get("/events/student");
+
+export const getUpcomingEvents = () => {
+  return API.get("/events/upcoming");
+};
+
+export const getLatestEvents = () => {
+  return API.get("/events/latest");
+};
