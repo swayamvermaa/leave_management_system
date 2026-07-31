@@ -39,7 +39,6 @@ export const firebaseSignup = async (
 
   await sendEmailVerification(
     userCredential.user
-    
   );
 
   return userCredential.user;

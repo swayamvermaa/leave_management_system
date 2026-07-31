@@ -99,12 +99,6 @@ function App() {
       path="/admin-profile"
       element={<AdminProfile />}
     />
-    
-    <Route
-    path="/email-verified"
-    element={<EmailVerified />}
-    />
-
     </Routes>
     
     </>
