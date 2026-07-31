@@ -14,11 +14,19 @@ import ManageEvents from "./pages/ManageEvents";
 import Profile from "./pages/Profile";
 import AdminProfile from "./pages/AdminProfile";
 import ApprovedLeave from "./pages/ApprovedLeave";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 
 function App() {
   return (
+     <>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+      />
     <Routes>
       <Route path="/" element={<Login />} />
 
@@ -91,10 +99,15 @@ function App() {
       path="/admin-profile"
       element={<AdminProfile />}
     />
+    
+    <Route
+    path="/email-verified"
+    element={<EmailVerified />}
+    />
 
     </Routes>
     
-
+    </>
   );
 }
 

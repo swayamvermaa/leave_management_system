@@ -87,9 +87,19 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
     phone: {
       type: String,
       trim: true,
+    },
+    resetOTP: {
+      type: String,
+      default: null,
+    },
+
+    resetOTPExpire: {
+      type: Date,
+      default: null,
     },
   },
   {

@@ -2,6 +2,10 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import validator from "validator";
 import jwt from "jsonwebtoken";
+import transporter from "../config/mail.js";
+import crypto from "crypto";
+import otpGenerator from "otp-generator";
+
 
 // Register User
 export const registerUser = async (req, res) => {
@@ -218,6 +222,185 @@ export const loginUser = async (req, res) => {
   }
 };
 
+export const forgotPassword = async (req, res) => {
+  try {
+
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const otp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    });
+
+    user.resetOTP = otp;
+    user.resetOTPExpire = Date.now() + 2 * 60 * 1000;
+
+    await user.save();
+
+    await transporter.sendMail({
+      from: process.env.BREVO_SENDER,
+      to: email,
+      subject: "Password Reset OTP",
+      html: `
+        <h2>Campus Duty Leave Management</h2>
+        <h3>Your OTP is:</h3>
+        <h1>${otp}</h1>
+        <p>This OTP is valid for only 5 minutes.</p>
+      `,
+    });
+
+    res.json({
+      success: true,
+      message: "OTP sent successfully",
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+
+    const { email, otp, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.resetOTPExpire < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP has expired. Please resend OTP.",
+      });
+
+    }
+
+    // OTP match
+    if (user.resetOTP !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+
+    // OTP expiry
+    if (new Date(user.resetOTPExpire) < new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP Expired",
+      });
+    }
+
+    // Password Hash
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+
+    // OTP Clear
+    user.resetOTP = null;
+    user.resetOTPExpire = null;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Password changed successfully",
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all fields.",
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+
+    const isMatch = await bcrypt.compare(
+      oldPassword,
+      user.password
+    );
+
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Old password is incorrect.",
+      });
+    }
+
+    const samePassword = await bcrypt.compare(
+      newPassword,
+      user.password
+    );
+
+    if (samePassword) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "New password cannot be same as old password.",
+      });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Password changed successfully.",
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+
+  }
+};
 // import User from "../models/User.js";
 import Leave from "../models/Leave.js";
 
@@ -260,5 +443,27 @@ export const getDashboardStats = async (req, res) => {
       success: false,
       message: "Server Error",
     });
+  }
+};
+
+export const checkOldPassword = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    const isMatch = await bcrypt.compare(
+      req.body.oldPassword,
+      user.password
+    );
+
+    res.json({
+      success: isMatch,
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      success: false,
+    });
+
   }
 };

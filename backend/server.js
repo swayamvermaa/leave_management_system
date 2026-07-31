@@ -3,8 +3,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 console.log(process.cwd());
-console.log("EMAIL_USER =", process.env.EMAIL_USER);
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded ✅" : "Missing ❌");
+console.log("BREVO_HOST =", process.env.BREVO_HOST);
+console.log("BREVO_PORT =", process.env.BREVO_PORT);
+console.log("BREVO_USER =", process.env.BREVO_USER);
 import app from "./app.js";
 import connectDB from "./config/db.js";
 

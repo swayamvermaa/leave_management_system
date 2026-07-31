@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaUserGraduate } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import API from "../api/axios";
 import { firebaseLogin } from "../api/authApi";
+import { Modal } from "react-bootstrap";
 
 function Login() {
   const navigate = useNavigate();
+  const [timer, setTimer] = useState(300); // 5 min
+  const [canResend, setCanResend] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const [showForgot, setShowForgot] = useState(false);
+    const [forgotData, setForgotData] = useState({
+      email: "",
+      otp: "",
+      password: "",
+    });
+    const [otpSent, setOtpSent] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -191,6 +203,91 @@ const handleSubmit = async (e) => {
   }
 };
 
+const sendOTP = async () => {
+  try {
+    setLoading(true);
+    await API.post("/auth/forgot-password", {
+      email: forgotData.email,
+    });
+
+    toast.success("OTP sent successfully");
+    
+    setOtpSent(true);
+    setTimer(200); // 5 minutes
+    setCanResend(false);
+
+  } catch (err) {
+
+    toast.error(
+      err.response?.data?.message ||
+      "Failed to send OTP"
+    );
+
+  }
+  finally {
+
+    setLoading(false);
+
+    }
+};
+
+const resetPassword = async () => {
+  if (!forgotData.otp) {
+    toast.error("Enter OTP");
+    return;
+  }
+
+  if (!forgotData.password) {
+    toast.error("Enter new password");
+    return;
+  }
+  try {
+
+    await API.post("/auth/reset-password", {
+      email: forgotData.email,
+      otp: forgotData.otp,
+      password: forgotData.password,
+    });
+
+    toast.success("Password changed successfully");
+
+    setShowForgot(false);
+
+    setOtpSent(false);
+
+    setForgotData({
+      email: "",
+      otp: "",
+      password: "",
+    });
+
+  } catch (err) {
+
+    toast.error(
+      err.response?.data?.message ||
+      "Failed"
+    );
+
+  }
+};
+useEffect(() => {
+  let interval;
+
+  if (otpSent && timer > 0) {
+    interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+  }
+
+  if (timer === 0) {
+    setCanResend(true);
+    clearInterval(interval);
+  }
+
+  return () => clearInterval(interval);
+}, [otpSent, timer]);
+
+
   return (
     <div className="container-fluid vh-100 d-flex justify-content-center align-items-center bg-light">
 
@@ -253,6 +350,16 @@ const handleSubmit = async (e) => {
             Login
           </button>
 
+        <div className="text-end mt-2">
+        <button
+          type="button"
+          className="btn btn-link p-0"
+          onClick={() => setShowForgot(true)}
+        >
+          Forgot Password?
+        </button>
+      </div>
+
           <div className="text-center mt-3">
 
             <p className="mb-0">
@@ -267,6 +374,113 @@ const handleSubmit = async (e) => {
         </form>
 
       </div>
+      <Modal
+        show={showForgot}
+        onHide={() => {
+          setShowForgot(false);
+          setOtpSent(false);
+        }}
+        centered
+      >
+
+        <Modal.Header closeButton>
+
+          <Modal.Title>
+            Forgot Password
+          </Modal.Title>
+
+        </Modal.Header>
+
+        <Modal.Body>
+
+          <input
+            type="email"
+            className="form-control mb-3"
+            placeholder="Enter Email"
+            value={forgotData.email}
+            onChange={(e) =>
+              setForgotData({
+                ...forgotData,
+                email: e.target.value,
+              })
+            }
+          />
+
+          {!otpSent ? (
+            <button
+              className="btn btn-primary w-100"
+              onClick={sendOTP}
+              disabled={loading}
+              >
+              {loading ? "Sending..." : "Send OTP"}
+              </button>
+
+          ) : (
+
+            <>
+
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Enter OTP"
+                value={forgotData.otp}
+                onChange={(e) =>
+                  setForgotData({
+                    ...forgotData,
+                    otp: e.target.value,
+                  })
+                }
+              />
+
+              <div className="text-center mb-3">
+
+                    {!canResend ? (
+
+                      <small className="text-danger">
+                        OTP expires in{" "}
+                        {Math.floor(timer / 60)}:
+                        {(timer % 60).toString().padStart(2, "0")}
+                      </small>
+
+                    ) : (
+
+                      <button
+                        className="btn btn-link"
+                        onClick={sendOTP}
+                      >
+                        Resend OTP
+                      </button>
+
+                    )}
+
+                  </div>
+
+              <input
+                type="password"
+                className="form-control mb-3"
+                placeholder="New Password"
+                value={forgotData.password}
+                onChange={(e) =>
+                  setForgotData({
+                    ...forgotData,
+                    password: e.target.value,
+                  })
+                }
+              />
+              <button
+                className="btn btn-success w-100"
+                onClick={resetPassword}
+              >
+                Reset Password
+              </button>
+
+            </>
+
+          )}
+
+        </Modal.Body>
+
+      </Modal>
 
     </div>
   );
