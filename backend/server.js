@@ -1,5 +1,6 @@
 import userRoutes from "./routes/userRoutes.js";
 import dotenv from "dotenv";
+import app from "./app.js";
 dotenv.config();
 
 console.log(process.cwd());
