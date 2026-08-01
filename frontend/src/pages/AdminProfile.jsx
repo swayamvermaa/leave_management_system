@@ -280,11 +280,74 @@ const handlePasswordChange = async () => {
 
               </div>
 
+                 {showPasswordForm && (
+                <div className="col-12 mt-4">
+                  <div className="card shadow border-0">
+
+                    <div className="card-header bg-warning">
+                      <h5 className="mb-0">Change Password</h5>
+                    </div>
+
+                    <div className="card-body">
+
+                      <input
+                        type="password"
+                        className="form-control mb-3"
+                        placeholder="Old Password"
+                        value={passwordData.oldPassword}
+                        onChange={(e) =>
+                          setPasswordData({
+                            ...passwordData,
+                            oldPassword: e.target.value,
+                          })
+                        }
+                      />
+
+                      <input
+                        type="password"
+                        className="form-control mb-3"
+                        placeholder="New Password"
+                        value={passwordData.newPassword}
+                        onChange={(e) =>
+                          setPasswordData({
+                            ...passwordData,
+                            newPassword: e.target.value,
+                          })
+                        }
+                      />
+
+                      <input
+                        type="password"
+                        className="form-control mb-3"
+                        placeholder="Confirm Password"
+                        value={passwordData.confirmPassword}
+                        onChange={(e) =>
+                          setPasswordData({
+                            ...passwordData,
+                            confirmPassword: e.target.value,
+                          })
+                        }
+                      />
+
+                      <button
+                        className="btn btn-warning"
+                        onClick={handlePasswordChange}
+                      >
+                        Change Password
+                      </button>
+
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
             </div>
 
           )}
 
         </div>
+
 
       </div>
 
