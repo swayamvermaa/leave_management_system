@@ -28,7 +28,7 @@ dotenv.config();
 import app from "./app.js";
 import connectDB from "./config/db.js";
 
-import userRoutes from "./routes/userRoutes.js";
+// import userRoutes from "./routes/userRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
 
 console.log(process.cwd());
@@ -37,7 +37,7 @@ console.log("BREVO_PORT =", process.env.BREVO_PORT);
 console.log("BREVO_USER =", process.env.BREVO_USER);
 
 app.use("/api/events", eventRoutes);
-app.use("/api/users", userRoutes);
+// app.use("/api/users", userRoutes);
 
 connectDB();
 
