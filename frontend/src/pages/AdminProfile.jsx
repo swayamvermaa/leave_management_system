@@ -5,6 +5,8 @@ import {
   updateAdminProfile,
 } from "../api/adminApi";
 import { toast } from "react-toastify";
+import API from "../api/axios";
+import { ToastContainer } from "react-toastify";
 
 function AdminProfile() {
 
@@ -18,6 +20,14 @@ function AdminProfile() {
     name: "",
     email: "",
     phone: "",
+  });
+
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   useEffect(() => {
@@ -83,6 +93,47 @@ const handleUpdate = async () => {
     toast.error(
       error.response?.data?.message ||
       "Update Failed"
+    );
+
+  }
+
+};
+
+const handlePasswordChange = async () => {
+
+  if (
+    passwordData.newPassword !==
+    passwordData.confirmPassword
+  ) {
+    toast.error("Passwords do not match");
+    return;
+  }
+
+  try {
+
+    const response = await API.put(
+      "/auth/change-password",
+      {
+        oldPassword: passwordData.oldPassword,
+        newPassword: passwordData.newPassword,
+      }
+    );
+
+    toast.success(response.data.message);
+
+    setPasswordData({
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
+
+    setShowPasswordForm(false);
+
+  } catch (err) {
+
+    toast.error(
+      err.response?.data?.message ||
+      "Failed to change password"
     );
 
   }
@@ -176,34 +227,54 @@ const handleUpdate = async () => {
 
                 {!isEditing ? (
 
-                  <button
-                    className="btn btn-primary"
-                    onClick={() =>
-                      setIsEditing(true)
-                    }
-                  >
-                    Edit Profile
-                  </button>
+                   <>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => setIsEditing(true)}
+                    >
+                      Edit Profile
+                    </button>
+
+                    <button
+                      className="btn btn-warning ms-2"
+                      onClick={() =>
+                        setShowPasswordForm(!showPasswordForm)
+                      }
+                    >
+                      {showPasswordForm
+                        ? "Close Password Form"
+                        : "Change Password"}
+                    </button>
+                  </>
 
                 ) : (
 
-                  <>
-                    <button
-                      className="btn btn-success me-2"
-                      onClick={handleUpdate}
-                    >
-                      Save Changes
-                    </button>
+                 <>
+                  <button
+                    className="btn btn-success me-2"
+                    onClick={handleUpdate}
+                  >
+                    Save Changes
+                  </button>
 
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() =>
-                        setIsEditing(false)
-                      }
-                    >
-                      Cancel
-                    </button>
-                  </>
+                  <button
+                    className="btn btn-secondary me-2"
+                    onClick={() => setIsEditing(false)}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    className="btn btn-warning"
+                    onClick={() =>
+                      setShowPasswordForm(!showPasswordForm)
+                    }
+                  >
+                    {showPasswordForm
+                      ? "Close Password Form"
+                      : "Change Password"}
+                  </button>
+                </>
 
                 )}
 
