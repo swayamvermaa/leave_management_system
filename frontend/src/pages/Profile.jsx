@@ -36,8 +36,10 @@ function Profile() {
     const response = await getProfile();
 
     console.log(response.data);
+        console.log("Current User:", response.data.user);
+    console.log("Role:", response.data.user.role);
 
-    setUser(response.data.user);   // <-- YE LINE ADD KARO
+    setUser(response.data.user); 
 
     setFormData({
       name: response.data.user.name || "",
