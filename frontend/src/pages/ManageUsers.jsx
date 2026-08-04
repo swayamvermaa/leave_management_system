@@ -430,7 +430,7 @@ const hods = visibleUsers.filter((user) => {
             >
 
               <button
-                className="btn-warning btn-sm w-100 w-lg-auto"
+                className="btn btn-warning btn-sm me-2 w-100"
                 onClick={() => handleEdit(user)}
               >
                 Edit
