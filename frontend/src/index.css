@@ -1,3 +1,19 @@
+html,
+body,
+#root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  white-space: nowrap;
+}
+
 body {
   margin: 0;
   padding: 0;

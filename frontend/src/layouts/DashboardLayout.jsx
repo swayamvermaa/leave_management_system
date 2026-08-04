@@ -32,7 +32,9 @@ useEffect(() => {
       <div
         className="flex-grow-1"
         style={{
-          marginLeft: isTabletOrMobile ? "0" : "260px",
+            marginLeft: window.innerWidth >= 992 ? "260px" : "0",
+  width: window.innerWidth >= 992 ? "calc(100% - 260px)" : "100%",
+  overflowX: "hidden",
         }}
       >
         <Navbar setSidebarOpen={setSidebarOpen} />

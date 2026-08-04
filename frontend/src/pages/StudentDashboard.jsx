@@ -77,8 +77,10 @@ const loadEvents = async () => {
         <div className="col-md-3">
           <div className="card shadow-sm border-0">
             <div className="card-body text-center">
-              <FaFileAlt className="text-primary fs-1 mb-3" />
-              <h3>{total}</h3>
+              <FaFileAlt className="text-primary fs-1 mb-3"/>
+              <h3>
+                {total}
+              </h3>
               <p>Total Leaves</p>
             </div>
           </div>
@@ -87,7 +89,7 @@ const loadEvents = async () => {
         <div className="col-md-3">
           <div className="card shadow-sm border-0">
             <div className="card-body text-center">
-              <FaClock className="text-warning fs-1 mb-3" />
+              <FaClock className="text-primary fs-1 mb-3"/>
               <h3>{pending}</h3>
               <p>Pending</p>
             </div>
@@ -97,7 +99,7 @@ const loadEvents = async () => {
         <div className="col-md-3">
           <div className="card shadow-sm border-0">
             <div className="card-body text-center">
-              <FaCheckCircle className="text-success fs-1 mb-3" />
+              <FaCheckCircle className="text-primary fs-1 mb-3"/>
               <h3>{approved}</h3>
               <p>Approved</p>
             </div>
@@ -107,7 +109,7 @@ const loadEvents = async () => {
         <div className="col-md-3">
           <div className="card shadow-sm border-0">
             <div className="card-body text-center">
-              <FaTimesCircle className="text-danger fs-1 mb-3" />
+              <FaTimesCircle className="text-primary fs-1 mb-3" />
               <h3>{rejected}</h3>
               <p>Rejected</p>
             </div>
@@ -116,7 +118,7 @@ const loadEvents = async () => {
 
       </div>
 
-      <div className="card shadow-sm mt-5 border-0">
+      <div className="card shadow-sm mt-5 border-0 rounded-4">
 
         <div className="card-header bg-primary text-white">
           <h5 className="mb-0">
@@ -129,9 +131,18 @@ const loadEvents = async () => {
           {loading ? (
             <h5 className="text-center">Loading...</h5>
           ) : (
-            <div className="table-responsive">
+            <div className="table-responsive"
+              style={{
+                overflowX: "auto",
+                WebkitOverflowScrolling: "touch",
+              }} 
+            >
 
-              <table className="table table-bordered">
+              <table className="table table-bordered table-hover align-middle"
+                style={{
+                  minWidth: "700px",
+                }}
+              >
 
                 <thead>
                   <tr>
@@ -174,12 +185,12 @@ const loadEvents = async () => {
                         <td>
 
                           <span
-                            className={`badge ${
+                              className={`badge px-3 py-2 ${
                               leave.finalStatus === "Approved"
                                 ? "bg-success"
                                 : leave.finalStatus === "Rejected"
                                 ? "bg-danger"
-                                : "bg-warning"
+                                : "bg-warning text-dark"
                             }`}
                           >
                             {leave.finalStatus}
@@ -205,6 +216,12 @@ const loadEvents = async () => {
       <div className="mt-4">
         <button
           className="btn btn-primary"
+          style={{
+          width:
+          window.innerWidth < 576
+          ? "100%"
+          : "auto",
+          }}
           onClick={() => navigate("/apply-leave")}
         >
           Apply New Leave
