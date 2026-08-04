@@ -144,7 +144,7 @@ const handlePasswordChange = async () => {
 
     <DashboardLayout>
 
-      <div className="card shadow">
+      <div className="card shadow border-0 rounded-4">
 
         <div className="card-header bg-dark text-white">
 
@@ -160,16 +160,19 @@ const handlePasswordChange = async () => {
 
           ) : (
 
-            <div className="row">
+            <div className="row g-4 align-items-center">
 
-              <div className="col-md-4 text-center">
+              <div className="col-12 col-md-4 text-center">
 
                 <img
-                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                  alt="Profile"
-                  width="180"
-                  className="rounded-circle shadow"
-                />
+                    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                    alt="Profile"
+                    className="rounded-circle shadow img-fluid"
+                    style={{
+                      width: "170px",
+                      maxWidth: "100%",
+                    }}
+                  />
 
                 <h4 className="mt-3">
                   {admin.name}
@@ -181,14 +184,14 @@ const handlePasswordChange = async () => {
 
               </div>
 
-              <div className="col-md-8">
+              <div className="col-12 col-md-8">
 
                 <div className="mb-3">
 
                   <label>Name</label>
 
                   <input
-                    className="form-control"
+                    className="form-control form-control-lg"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
@@ -202,7 +205,7 @@ const handlePasswordChange = async () => {
                   <label>Email</label>
 
                   <input
-                    className="form-control"
+                    className="form-control form-control-lg"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
@@ -216,7 +219,7 @@ const handlePasswordChange = async () => {
                   <label>Phone</label>
 
                   <input
-                    className="form-control"
+                    className="form-control form-control-lg"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
@@ -227,9 +230,9 @@ const handlePasswordChange = async () => {
 
                 {!isEditing ? (
 
-                   <>
+                   <div className="d-grid d-md-flex gap-2 mt-3">
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-primary w-100 w-md-auto"
                       onClick={() => setIsEditing(true)}
                     >
                       Edit Profile
@@ -245,27 +248,27 @@ const handlePasswordChange = async () => {
                         ? "Close Password Form"
                         : "Change Password"}
                     </button>
-                  </>
+                  </div>
 
                 ) : (
 
-                 <>
+                 <div className="d-grid d-md-flex gap-2 mt-3">
                   <button
-                    className="btn btn-success me-2"
+                    className="btn btn-success w-100 w-md-auto"
                     onClick={handleUpdate}
                   >
                     Save Changes
                   </button>
 
                   <button
-                    className="btn btn-secondary me-2"
+                    className="btn btn-secondary w-100 w-md-auto"
                     onClick={() => setIsEditing(false)}
                   >
                     Cancel
                   </button>
 
                   <button
-                    className="btn btn-warning"
+                    className="btn btn-warning w-100 w-md-auto"
                     onClick={() =>
                       setShowPasswordForm(!showPasswordForm)
                     }
@@ -274,7 +277,7 @@ const handlePasswordChange = async () => {
                       ? "Close Password Form"
                       : "Change Password"}
                   </button>
-                </>
+                </div>
 
                 )}
 
@@ -292,7 +295,7 @@ const handlePasswordChange = async () => {
 
                       <input
                         type="password"
-                        className="form-control mb-3"
+                        className="form-control form-control-lg mb-3"
                         placeholder="Old Password"
                         value={passwordData.oldPassword}
                         onChange={(e) =>
@@ -305,7 +308,7 @@ const handlePasswordChange = async () => {
 
                       <input
                         type="password"
-                        className="form-control mb-3"
+                        className="form-control form-control-lg mb-3"
                         placeholder="New Password"
                         value={passwordData.newPassword}
                         onChange={(e) =>
@@ -318,7 +321,7 @@ const handlePasswordChange = async () => {
 
                       <input
                         type="password"
-                        className="form-control mb-3"
+                        className="form-control form-control-lg mb-3"
                         placeholder="Confirm Password"
                         value={passwordData.confirmPassword}
                         onChange={(e) =>
@@ -330,7 +333,7 @@ const handlePasswordChange = async () => {
                       />
 
                       <button
-                        className="btn btn-warning"
+                        className="btn btn-warning w-100"
                         onClick={handlePasswordChange}
                       >
                         Change Password

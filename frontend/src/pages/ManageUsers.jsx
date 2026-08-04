@@ -227,7 +227,17 @@ const hods = visibleUsers.filter((user) => {
 
     <DashboardLayout>
 
-      <h2 className="fw-bold">
+      <h2
+        className="fw-bold mb-3"
+        style={{
+          fontSize:
+            window.innerWidth < 576
+              ? "24px"
+              : window.innerWidth < 992
+              ? "28px"
+              : "32px",
+        }}
+      >
         Manage Users
       </h2>
 
@@ -238,11 +248,11 @@ const hods = visibleUsers.filter((user) => {
         </h3>
         <div className="row mb-3">
 
-            <div className="col-md-5">
+            <div className="col-12 col-md-6 col-lg-5">
 
               <input
                 type="text"
-                className="form-control"
+                className="form-control form-control-lg"
                 placeholder="Search by Name / Enrollment / Phone / Email"
                 value={studentSearch}
                 onChange={(e) => setStudentSearch(e.target.value)}
@@ -252,11 +262,11 @@ const hods = visibleUsers.filter((user) => {
 
           </div>
 
-      <div className="card shadow mt-4">
+      <div className="card shadow mt-4 rounded-4">
 
         <div className="table-responsive">
 
-          <table className="table table-bordered table-hover">
+          <table className="table table-bordered table-hover align-middle text-nowrap">
 
             <thead className="table-dark">
 
@@ -310,16 +320,21 @@ const hods = visibleUsers.filter((user) => {
                   <td>{user.phone}</td>
 
                   <td>{user.email}</td>
-                  <td>
+                  <td
+                    className="d-flex flex-column flex-lg-row gap-2"
+                    style={{
+                      minWidth: "150px",
+                    }}
+                  >
                   <button
-                    className="btn btn-warning btn-sm me-2"
+                    className="btn btn-warning btn-sm w-100 w-lg-auto"
                     onClick={() => handleEdit(user)}
                   >
                     Edit
                   </button>
 
                   <button
-                    className="btn btn-danger btn-sm"
+                    className="btn btn-danger btn-sm w-100 w-lg-auto"
                     onClick={() =>
                     handleDelete(user._id, user.name)
                     }
@@ -347,11 +362,11 @@ const hods = visibleUsers.filter((user) => {
 
           <div className="row mb-3">
 
-          <div className="col-md-5">
+          <div className="col-12 col-md-6 col-lg-5">
 
             <input
               type="text"
-              className="form-control"
+              className="form-control form-control-lg"
               placeholder="Search by Name / Phone / Email"
               value={mentorSearch}
               onChange={(e) => setMentorSearch(e.target.value)}
@@ -361,9 +376,11 @@ const hods = visibleUsers.filter((user) => {
 
         </div>
 
-  <div className="table-responsive">
 
-    <table className="table table-bordered table-hover">
+  <div className="card shadow mt-3 rounded-4">
+    <div className="table-responsive">
+
+    <table className="table table-bordered table-hover align-middle text-nowrap">
 
       <thead className="table-success">
 
@@ -405,17 +422,22 @@ const hods = visibleUsers.filter((user) => {
 
             <td>{user.email}</td>
 
-            <td>
+            <td
+            className="d-flex flex-column flex-lg-row gap-2"
+              style={{
+                minWidth: "150px",
+              }}
+            >
 
               <button
-                className="btn btn-warning btn-sm me-2"
+                className="btn-warning btn-sm w-100 w-lg-auto"
                 onClick={() => handleEdit(user)}
               >
                 Edit
               </button>
 
               <button
-                className="btn btn-danger btn-sm"
+                className="btn btn-danger btn-sm w-100 w-lg-auto"
                 onClick={() =>
                 handleDelete(user._id, user.name)
                 }
@@ -436,17 +458,18 @@ const hods = visibleUsers.filter((user) => {
   </div>
 
 </div>
+</div>
 
 <h3 className="mt-5 text-warning">
 📋 Organizers
 </h3>
 <div className="row mb-3">
 
-  <div className="col-md-5">
+  <div className="col-12 col-md-6 col-lg-5">
 
     <input
       type="text"
-      className="form-control"
+      className="form-control form-control-lg"
       placeholder="Search by Name / Phone / Email"
       value={organizerSearch}
       onChange={(e) => setOrganizerSearch(e.target.value)}
@@ -456,11 +479,11 @@ const hods = visibleUsers.filter((user) => {
 
 </div>
 
-<div className="card shadow mt-3">
+<div className="card shadow mt-3 rounded-4">
 
   <div className="table-responsive">
 
-    <table className="table table-bordered table-hover">
+    <table className="table table-bordered table-hover align-middle text-nowrap">
 
       <thead className="table-warning">
 
@@ -489,17 +512,21 @@ const hods = visibleUsers.filter((user) => {
             <td>{user.phone}</td>
             <td>{user.email}</td>
 
-            <td>
+            <td
+              className="d-flex flex-column flex-lg-row gap-2"
+              style={{
+                minWidth: "150px",
+              }}>
 
               <button
-                className="btn btn-warning btn-sm me-2"
+                className="btn btn-warning btn-sm w-100 w-lg-auto"
                 onClick={() => handleEdit(user)}
               >
                 Edit
               </button>
 
               <button
-                className="btn btn-danger btn-sm"
+                className="btn btn-danger btn-sm w-100 w-lg-auto"
                 onClick={() =>
                   handleDelete(user._id, user.name)
                   }
@@ -526,11 +553,11 @@ const hods = visibleUsers.filter((user) => {
 </h3>
 <div className="row mb-3">
 
-  <div className="col-md-5">
+  <div className="col-12 col-md-6 col-lg-5">
 
     <input
       type="text"
-      className="form-control"
+      className="form-control form-control-lg"
       placeholder="Search by Name / Phone / Email"
       value={hodSearch}
       onChange={(e) => setHodSearch(e.target.value)}
@@ -540,11 +567,11 @@ const hods = visibleUsers.filter((user) => {
 
 </div>
 
-<div className="card shadow mt-3">
+<div className="card shadow mt-3 rounded-4">
 
   <div className="table-responsive">
 
-    <table className="table table-bordered table-hover">
+    <table className="table table-bordered table-hover align-middle text-nowrap">
 
       <thead className="table-danger">
 
@@ -573,17 +600,23 @@ const hods = visibleUsers.filter((user) => {
             <td>{user.phone}</td>
             <td>{user.email}</td>
 
-            <td>
+            <td
+              className="d-flex flex-column flex-lg-row gap-2"
+              style={{
+                minWidth: "150px",
+              }}
+            
+            >
 
               <button
-                className="btn btn-warning btn-sm me-2"
+                className="btn btn-warning btn-sm w-100 w-lg-auto"
                 onClick={() => handleEdit(user)}
               >
                 Edit
               </button>
 
               <button
-                className="btn btn-danger btn-sm"
+                className="btn btn-danger btn-sm w-100 w-lg-auto"
                 onClick={() =>
                 handleDelete(user._id, user.name)
                 }
@@ -610,7 +643,7 @@ const hods = visibleUsers.filter((user) => {
               className="modal fade show d-block"
               style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
             >
-              <div className="modal-dialog">
+              <div className="modal-dialog modal-dialog-scrollable modal-lg">
                 <div className="modal-content">
 
                   <div className="modal-header">
@@ -628,7 +661,7 @@ const hods = visibleUsers.filter((user) => {
                       <label>Name</label>
 
                       <input
-                        className="form-control"
+                        className="form-control form-control-lg"
                         value={formData.name}
                         onChange={(e) =>
                           setFormData({
@@ -643,7 +676,7 @@ const hods = visibleUsers.filter((user) => {
                       <label>Email</label>
 
                       <input
-                        className="form-control"
+                        className="form-control form-control-lg"
                         value={formData.email}
                         onChange={(e) =>
                           setFormData({
@@ -658,7 +691,7 @@ const hods = visibleUsers.filter((user) => {
                       <label>Role</label>
 
                       <select
-                        className="form-select"
+                        className="form-select form-select-lg"
                         value={formData.role}
                         onChange={(e) =>
                           setFormData({
@@ -678,7 +711,7 @@ const hods = visibleUsers.filter((user) => {
                           <label>Phone</label>
 
                           <input
-                            className="form-control"
+                            className="form-control form-control-lg"
                             value={formData.phone}
                             onChange={(e) =>
                               setFormData({
@@ -700,7 +733,7 @@ const hods = visibleUsers.filter((user) => {
                               <label>Enrollment Number</label>
 
                               <input
-                                className="form-control"
+                                className="form-control form-control-lg"
                                 value={formData.enrollmentNumber}
                                 onChange={(e)=>
                                   setFormData({
@@ -717,7 +750,7 @@ const hods = visibleUsers.filter((user) => {
                               <label>Course</label>
 
                                 <select
-                                    className="form-select"
+                                    className="form-select form-select-lg"
                                     value={formData.course}
                                     onChange={(e) =>
                                       setFormData({
@@ -740,7 +773,7 @@ const hods = visibleUsers.filter((user) => {
                                 <label>Department</label>
 
                                     <select
-                                      className="form-select"
+                                      className="form-select form-select-lg"
                                       value={formData.department}
                                       onChange={(e) =>
                                         setFormData({
@@ -764,7 +797,7 @@ const hods = visibleUsers.filter((user) => {
                               <div className="mb-3">
                                   <label>Year</label>
                                       <select
-                                      className="form-select"
+                                      className="form-select form-select-lg"
                                       value={formData.year}
                                       onChange={(e) =>
                                         setFormData({
@@ -784,7 +817,7 @@ const hods = visibleUsers.filter((user) => {
                                 <div className="mb-3">
                                     <label>Semester</label>
                                       <select
-                                        className="form-select"
+                                        className="form-select form-select-lg"
                                         value={formData.semester}
                                         onChange={(e) =>
                                           setFormData({
@@ -804,7 +837,7 @@ const hods = visibleUsers.filter((user) => {
                                   <div className="mb-3">
                                       <label>Section</label>
                                         <select
-                                          className="form-select"
+                                          className="form-select form-select-lg"
                                           value={formData.section}
                                           onChange={(e) =>
                                             setFormData({
@@ -837,7 +870,7 @@ const hods = visibleUsers.filter((user) => {
                             <label>Mentor Course</label>
 
                             <select
-                            className="form-select"
+                            className="form-select form-select-lg"
                             value={formData.mentorCourse}
                             onChange={(e)=>
                             setFormData({
@@ -865,7 +898,7 @@ const hods = visibleUsers.filter((user) => {
                               <label>Mentor Department</label>
 
                               <select
-                              className="form-select"
+                              className="form-select form-select-lg"
                               value={formData.mentorDepartment}
                               onChange={(e)=>
                               setFormData({
@@ -894,7 +927,7 @@ const hods = visibleUsers.filter((user) => {
                                     <label>Mentor Year</label>
 
                                     <select
-                                    className="form-select"
+                                    className="form-select form-select-lg"
                                     value={formData.mentorYear}
                                     onChange={(e)=>
                                     setFormData({
@@ -919,7 +952,7 @@ const hods = visibleUsers.filter((user) => {
                                         <label>Mentor Section</label>
 
                                         <select
-                                        className="form-select"
+                                        className="form-select form-select-lg"
                                         value={formData.mentorSection}
                                         onChange={(e)=>
                                         setFormData({
@@ -957,7 +990,7 @@ const hods = visibleUsers.filter((user) => {
                           <label>Course</label>
 
                           <select
-                          className="form-select"
+                          className="form-select form-select-lg"
                           value={formData.course}
                           onChange={(e)=>
                           setFormData({
@@ -984,7 +1017,7 @@ const hods = visibleUsers.filter((user) => {
                           <label>Department</label>
 
                           <select
-                          className="form-select"
+                          className="form-select form-select-lg"
                           value={formData.department}
                           onChange={(e)=>
                           setFormData({
@@ -1024,7 +1057,7 @@ const hods = visibleUsers.filter((user) => {
                               <label>Course</label>
 
                               <select
-                              className="form-select"
+                              className="form-select form-select-lg"
                               value={formData.course}
                               onChange={(e)=>
                               setFormData({
@@ -1051,7 +1084,7 @@ const hods = visibleUsers.filter((user) => {
                               <label>Department</label>
 
                               <select
-                              className="form-select"
+                              className="form-select form-select-lg"
                               value={formData.department}
                               onChange={(e)=>
                               setFormData({
@@ -1083,17 +1116,17 @@ const hods = visibleUsers.filter((user) => {
 
                   </div>
 
-                  <div className="modal-footer">
+                  <div className="modal-footer flex-column flex-md-row">
 
                     <button
-                      className="btn btn-secondary"
+                      className="btn btn-secondary w-100 w-md-auto"
                       onClick={() => setShowModal(false)}
                     >
                       Cancel
                     </button>
 
                     <button
-                      className="btn btn-success"
+                      className="btn btn-success w-100 w-md-auto"
                       onClick={handleUpdate}
                     >
                       Save Changes

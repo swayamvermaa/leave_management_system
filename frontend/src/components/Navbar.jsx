@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaBell, FaUserCircle } from "react-icons/fa";
+import { FaBell, FaUserCircle, FaBars} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {
   getUpcomingEvents,
@@ -8,7 +8,7 @@ import {
 
 // const user = JSON.parse(localStorage.getItem("user")); 
 
-function Navbar() {
+function Navbar({ setSidebarOpen }) {
 
   const navigate = useNavigate();
 
@@ -107,20 +107,45 @@ function Navbar() {
 
     <nav className="navbar navbar-expand-lg bg-white shadow-sm px-4">
 
-      <div className="container-fluid">
+    <div className="container-fluid d-flex justify-content-between align-items-center">
 
-        {/* Left Side */}
+  <div className="d-flex align-items-center">
 
-        <h4 className="fw-bold text-primary mb-0">
+    <button
+      className="btn btn-outline-primary me-2"
+      style={{
+        display:
+          window.innerWidth < 992
+            ? "block"
+            : "none",
+      }}
+      onClick={() => setSidebarOpen(prev => !prev)}
+    >
+      <FaBars />
+    </button>
 
-          Campus Duty Leave Management
+    <h5
+  className="fw-bold text-primary mb-0"
+  style={{
+    fontSize:
+      window.innerWidth < 576
+      ? "18px"
+      : window.innerWidth < 768
+      ? "20px"
+      : window.innerWidth < 992
+      ? "24px"
+      : "28px",
+  }}
+>
+      CDLMS
+    </h5>
 
-        </h4>
+  </div>
 
 
         {/* Right Side */}
 
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center gap-2 flex-wrap">
 
 
           {/* Notification */}
@@ -158,11 +183,20 @@ function Navbar() {
               <div
                 className="position-absolute bg-white shadow-lg rounded-3 p-3"
                 style={{
-                  width: "380px",
-                  right: 0,
-                  top: "45px",
+                  width: window.innerWidth < 576
+                    ? "95vw"
+                    : window.innerWidth < 992
+                    ? "340px"
+                    : "380px",
+                  left: window.innerWidth < 768 ? "50%" : "auto",
+                  transform:
+                    window.innerWidth < 768
+                      ? "translateX(-50%)"
+                      : "none",
+                  right: window.innerWidth >= 768 ? 0 : "auto",
+                  top: "55px",
                   zIndex: 1050,
-                  maxHeight: "500px",
+                  maxHeight: "70vh",
                   overflowY: "auto",
                 }}
               >
@@ -214,13 +248,13 @@ function Navbar() {
                         📍 {event.venue || "Venue not specified"}
                       </div>
 
-                      <div className="small text-muted">
-                        👤 {event.organizer?.name || "Organizer"}
-                      </div>
+                      <div className="small text-muted mt-1">
+                        📅 {formatDate(event.startDate)}
+                        </div>
 
-                      <div className="small text-muted">
-                        🎓 {event.course} - Year {event.year} - Section {event.section}
-                      </div>
+                        <div className="small text-muted">
+                        📍 {event.venue}
+                        </div>
 
                       <div className="mt-2">
 
@@ -300,7 +334,7 @@ function Navbar() {
           {/* User Info */}
 
           <div
-              className="d-flex align-items-center me-3"
+              className="d-flex align-items-center me-2"
               style={{ cursor: "pointer" }}
               onClick={() => navigate("/profile")}
               title="View Profile"
@@ -310,28 +344,37 @@ function Navbar() {
                 className="text-primary me-2"
               />
 
-              <div>
-                <h6 className="mb-0">
-                  {user?.name}
-                </h6>
+              <div
+                  style={{
+                  display:
+                  window.innerWidth < 992
+                  ? "none"
+                  : "block",
+                  }}
+                  >
+              <h6 className="mb-0">{user?.name}</h6>
 
-                <small className="text-muted text-capitalize">
-                  {user?.role}
-                </small>
-              </div>
+              <small className="text-muted text-capitalize">
+                {user?.role}
+              </small>
+            </div>
             </div>
 
 
           {/* Logout */}
 
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={handleLogout}
-          >
-
-            Logout
-
-          </button>
+            <button
+              className="btn btn-danger btn-sm px-3"
+                style={{
+                display:
+                window.innerWidth < 992
+                ? "none"
+                : "block",
+                }}
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
 
         </div>
 
