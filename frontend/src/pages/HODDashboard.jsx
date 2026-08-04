@@ -10,6 +10,7 @@ import {
   getHodStats,
 } from "../api/hodApi";
 import HodLeaveTable from "../components/HodLeaveTable";
+import Loader from "../components/Loader";
 
 function HODDashboard() {
   const [leaves, setLeaves] = useState([]);
@@ -20,9 +21,25 @@ function HODDashboard() {
   rejected: 0,
 });
 useEffect(() => {
-  fetchLeaves();
-  fetchStats();
+  // fetchLeaves();
+  // fetchStats();
+  loadDashboard();
 }, []);
+
+const loadDashboard = async () => {
+  try {
+    setLoading(true);
+
+    await Promise.all([
+      fetchLeaves(),
+      fetchStats()
+    ]);
+
+  } finally {
+    setLoading(false);
+  }
+};
+
     const fetchLeaves = async () => {
       try {
         const response = await getHodLeaves();
@@ -46,8 +63,14 @@ useEffect(() => {
 
   } catch (error) {
     console.log(error);
-  }
+  }finally {
+  setLoading(false);
+}
 };
+
+if (loading) {
+  return <Loader />;
+}
 
   return (
     <DashboardLayout>

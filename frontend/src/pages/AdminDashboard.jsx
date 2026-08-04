@@ -8,8 +8,10 @@ import {
   FaUsers,
   FaClipboardList,
 } from "react-icons/fa";
+import Loader from "../components/Loader";
 
 function AdminDashboard() {
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     students: 0,
     mentors: 0,
@@ -24,12 +26,19 @@ function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
+      setLoading(true);
       const response = await getDashboardStats();
       setStats(response.data.data);
     } catch (error) {
       console.log(error);
-    }
+    } finally {
+    setLoading(false);
+  }
   };
+
+if (loading) {
+  return <Loader />;
+}
 
   return (
     <DashboardLayout>

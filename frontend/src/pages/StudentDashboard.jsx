@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../layouts/DashboardLayout";
 import API from "../api/axios";
 import { getStudentEvents } from "../api/eventApi";
+import Loader from "../components/Loader";
 
 import {
   FaFileAlt,
@@ -62,9 +63,14 @@ const loadEvents = async () => {
   }
 };
 
-  return (
-    <DashboardLayout>
+if (loading) {
+  return <Loader />;
+}
 
+  return (
+    
+    <DashboardLayout>
+      
       <div className="mb-4">
         <h2 className="fw-bold">Student Dashboard</h2>
         <p className="text-muted">
@@ -128,9 +134,9 @@ const loadEvents = async () => {
 
         <div className="card-body">
 
-          {loading ? (
+          {/* {loading ? (
             <h5 className="text-center">Loading...</h5>
-          ) : (
+          ) : ( */}
             <div className="table-responsive"
               style={{
                 overflowX: "auto",
@@ -207,7 +213,7 @@ const loadEvents = async () => {
               </table>
 
             </div>
-          )}
+          
 
         </div>
 
@@ -227,9 +233,9 @@ const loadEvents = async () => {
           Apply New Leave
         </button>
       </div>
-
     </DashboardLayout>
   );
 }
+
 
 export default StudentDashboard;

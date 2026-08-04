@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 import API from "../api/axios";
 import { firebaseSignup } from "../api/authApi";
+import Loader from "../components/Loader";
 
 
 function Signup() {
@@ -168,6 +169,10 @@ const handleSubmit = async (e) => {
     setLoading(false);
   }
 };
+
+if (loading) {
+  return <Loader />;
+}
 
   return (
     <div className="container py-5">
@@ -650,13 +655,14 @@ const handleSubmit = async (e) => {
 
             </div>
 
-        <button
-              type="submit"
-              className="btn btn-primary w-100"
-              disabled={loading}
-            >
-              {loading ? "Registering..." : "Register"}
-            </button>
+            <button
+  type="submit"
+  className="btn btn-primary w-100"
+  disabled={loading}
+>
+  {loading ? "Creating Account..." : "Register"}
+</button>
+
           </form>
           <div className="text-center mt-3">
             Already have an account?{" "}

@@ -10,6 +10,7 @@ import {
   getMentorStats,
 } from "../api/mentorApi";
 import MentorLeaveTable from "../components/MentorLeaveTable";
+import Loader from "../components/Loader";
 
 function MentorDashboard() {
   const [leaves, setLeaves] = useState([]);
@@ -19,10 +20,24 @@ function MentorDashboard() {
   approved: 0,
   rejected: 0,
 });
+
 useEffect(() => {
-  fetchLeaves();
-  fetchStats();
+  loadDashboard();
 }, []);
+
+const loadDashboard = async () => {
+  try {
+    setLoading(true);
+
+    await Promise.all([
+      fetchLeaves(),
+      fetchStats(),
+    ]);
+
+  } finally {
+    setLoading(false);
+  }
+};
 
   const fetchLeaves = async () => {
     try {
@@ -47,8 +62,14 @@ useEffect(() => {
 
   } catch (error) {
     console.log(error);
-  }
+  }finally {
+  setLoading(false);
+}
 };
+
+if (loading) {
+  return <Loader />;
+}
 
   return (
     <DashboardLayout>
@@ -97,17 +118,11 @@ useEffect(() => {
 
       {/* Table */}
 
-      {loading ? (
-          <div className="text-center mt-5">
-            <h5>Loading...</h5>
-          </div>
-        ) : (
           <MentorLeaveTable
             leaves={leaves}
             fetchLeaves={fetchLeaves}
             fetchStats={fetchStats}
           />
-        )}
     </DashboardLayout>
   );
 }

@@ -4,6 +4,8 @@ import { getProfile } from "../api/userApi";
 import { toast } from "react-toastify";
 import API from "../api/axios";
 import { ToastContainer } from "react-toastify";
+import Loader from "../components/Loader";
+
 
 function Profile() {
     const [user, setUser] = useState(null);
@@ -14,6 +16,7 @@ function Profile() {
     const [passwordStrength, setPasswordStrength] = useState("");
     const [passwordMatch, setPasswordMatch] = useState("");
     const [saving, setSaving] = useState(false);
+    const [passwordLoading, setPasswordLoading] = useState(false);
 
     const [formData, setFormData] = useState({
     name: "",
@@ -74,6 +77,7 @@ const handlePasswordChange = async () => {
   }
 
   try {
+    setPasswordLoading(true);
 
     console.log("Sending API Request");
 
@@ -114,7 +118,11 @@ const handlePasswordChange = async () => {
       "Something went wrong"
     );
 
-  }
+  }finally {
+
+    setPasswordLoading(false);
+
+}
 
 };
 
@@ -209,6 +217,10 @@ const checkStrength = (password) => {
   }
 
 };
+
+if (loading) {
+    return <Loader />;
+}
 
   return (
     <>
@@ -578,8 +590,9 @@ const checkStrength = (password) => {
               <button
                 className="btn btn-warning"
                 onClick={handlePasswordChange}
+                disabled={passwordLoading}
               >
-                Change Password
+                {passwordLoading ? "Changing..." : "Change Password"}
               </button>
 
             </div>

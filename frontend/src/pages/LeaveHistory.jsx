@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import API from "../api/axios";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function LeaveHistory() {
   const [search, setSearch] = useState("");
@@ -15,6 +16,7 @@ function LeaveHistory() {
 
   const fetchLeaves = async () => {
     try {
+      setLoading(true);
       const response = await API.get("/leave/my-leaves");
 
       setLeaveData(response.data.data);
@@ -47,6 +49,10 @@ function LeaveHistory() {
         return "warning";
     }
   };
+
+  if (loading) {
+  return <Loader />;
+}
 
   return (
     <DashboardLayout>
@@ -86,7 +92,6 @@ function LeaveHistory() {
 
           </div>
 
-          {loading && <p>Loading...</p>}
           {/* Table */}
           <div className="table-responsive">
 

@@ -5,12 +5,15 @@ import { ToastContainer, toast } from "react-toastify";
 import API from "../api/axios";
 import { firebaseLogin } from "../api/authApi";
 import { Modal } from "react-bootstrap";
+import Loader from "../components/Loader";
 
 function Login() {
   const navigate = useNavigate();
-  const [timer, setTimer] = useState(300); // 5 min
+  const [timer, setTimer] = useState(300);
   const [canResend, setCanResend] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  const [loading, setLoading] = useState(false);      // Login Loader
+  const [otpLoading, setOtpLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -34,6 +37,7 @@ function Login() {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+  setLoading(true);
 
   if (!formData.email || !formData.password) {
     toast.error("Please fill all fields");
@@ -200,12 +204,14 @@ const handleSubmit = async (e) => {
       error.message ||
       "Login Failed"
     );
+  } finally {
+    setLoading(false);
   }
 };
 
 const sendOTP = async () => {
   try {
-    setLoading(true);
+    setOtpLoading(false);
     await API.post("/auth/forgot-password", {
       email: forgotData.email,
     });
@@ -226,7 +232,7 @@ const sendOTP = async () => {
   }
   finally {
 
-    setLoading(false);
+    setOtpLoading(false);
 
     }
 };
@@ -287,6 +293,9 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, [otpSent, timer]);
 
+if (loading) {
+  return <Loader />;
+}
 
   return (
     <div className="container-fluid vh-100 d-flex justify-content-center align-items-center bg-light">
@@ -346,8 +355,9 @@ useEffect(() => {
           <button
             type="submit"
             className="btn btn-primary w-100"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
         <div className="text-end mt-2">

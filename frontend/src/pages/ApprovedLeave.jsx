@@ -5,6 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import jsPDF from "jspdf";
 import { FaDownload } from "react-icons/fa";
 import html2canvas from "html2canvas";
+import Loader from "../components/Loader";
 
 function ApprovedLeave() {
   const [leaves, setLeaves] = useState([]);
@@ -774,6 +775,9 @@ const downloadPDF = (leave) => {
     `Duty_Leave_Certificate_${enrollment}_${safeEventName}.pdf`
   );
 };
+if (loading) {
+  return <Loader />;
+}
 
   return (
     <DashboardLayout>

@@ -9,8 +9,10 @@ import {
   SEMESTERS,
   SECTIONS,
 } from "../constants/collegeData";
+import Loader from "../components/Loader";
 
 function CreateUser() {
+  const [creating, setCreating] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -56,7 +58,23 @@ function CreateUser() {
     return;
   }
 
+  if (formData.password.length < 6) {
+  toast.error("Password must be at least 6 characters");
+  return;
+}
+if (!formData.name.trim()) {
+  toast.error("Name is required");
+  return;
+}
+if (!formData.email.trim()) {
+  toast.error("Email is required");
+  return;
+}
+
     try {
+      setCreating(true);
+      // console.log("Creating Started");
+      // await new Promise(resolve => setTimeout(resolve, 2000));
       const response = await createUser(formData);
 
       toast.success(response.data.message);
@@ -88,11 +106,20 @@ function CreateUser() {
       toast.error(
         error.response?.data?.message || "Failed to create user"
       );
-    }
+    } finally {
+    setCreating(false);
+  }
   };
+
+  // if (creating) {
+  //   return <Loader />;
+  //   // setCreating(false);
+  // }
 
   return (
     <DashboardLayout>
+
+       {creating && <Loader />}
 
       <ToastContainer />
 
@@ -117,6 +144,7 @@ function CreateUser() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -131,6 +159,7 @@ function CreateUser() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -472,8 +501,9 @@ function CreateUser() {
 
           </div>
 
-          <button className="btn btn-primary">
-            Create User
+          <button className="btn btn-primary"
+            disabled={creating}>
+            {creating ? "Creating..." : "Create User"}
           </button>
 
         </form>

@@ -7,6 +7,7 @@ import {
 import { toast } from "react-toastify";
 import API from "../api/axios";
 import { ToastContainer } from "react-toastify";
+import Loader from "../components/Loader";
 
 function AdminProfile() {
 
@@ -15,6 +16,10 @@ function AdminProfile() {
   const [loading, setLoading] = useState(true);
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const [saving, setSaving] = useState(false);
+
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -78,6 +83,8 @@ const handleUpdate = async () => {
 
   try {
 
+    setSaving(true);
+
     const response = await updateAdminProfile(formData);
 
     toast.success(response.data.message);
@@ -95,6 +102,10 @@ const handleUpdate = async () => {
       "Update Failed"
     );
 
+  }finally {
+
+    setSaving(false);
+
   }
 
 };
@@ -111,6 +122,7 @@ const handlePasswordChange = async () => {
 
   try {
 
+    setPasswordLoading(true);
     const response = await API.put(
       "/auth/change-password",
       {
@@ -136,13 +148,22 @@ const handlePasswordChange = async () => {
       "Failed to change password"
     );
 
-  }
+  } finally {
+
+  setPasswordLoading(false);
+
+}
 
 };
+
+if (loading) {
+  return <Loader />;
+}
 
   return (
 
     <DashboardLayout>
+      <ToastContainer />
 
       <div className="card shadow border-0 rounded-4">
 
@@ -256,8 +277,9 @@ const handlePasswordChange = async () => {
                   <button
                     className="btn btn-success w-100 w-md-auto"
                     onClick={handleUpdate}
+                    disabled={saving}
                   >
-                    Save Changes
+                    {saving ? "Saving..." : "Save Changes"}
                   </button>
 
                   <button
@@ -335,8 +357,9 @@ const handlePasswordChange = async () => {
                       <button
                         className="btn btn-warning w-100"
                         onClick={handlePasswordChange}
+                        disabled={passwordLoading}
                       >
-                        Change Password
+                       {passwordLoading ? "Changing..." : "Change Password"}
                       </button>
 
                     </div>

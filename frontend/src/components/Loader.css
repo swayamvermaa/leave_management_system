@@ -1,0 +1,177 @@
+.loader-overlay{
+    position:fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:rgba(255,255,255,.75);
+    backdrop-filter:blur(8px);
+    z-index:99999;
+}
+
+.loader-card{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    padding:40px;
+
+    border-radius:25px;
+
+    background:white;
+
+    box-shadow:
+    0 10px 35px rgba(0,0,0,.12);
+
+    animation:fade .5s ease;
+
+}
+
+.loader-ring{
+
+    width:80px;
+    height:80px;
+
+    border-radius:50%;
+
+    border:6px solid #e9ecef;
+
+    border-top:6px solid #0d6efd;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    animation:spin .9s linear infinite;
+
+}
+
+.loader-ring-inner{
+
+    width:45px;
+    height:45px;
+
+    border-radius:50%;
+
+    background:#0d6efd22;
+
+}
+
+.loader-logo{
+
+    margin-top:22px;
+
+    font-weight:800;
+
+    letter-spacing:2px;
+
+    background:linear-gradient(90deg,#0d6efd,#6610f2);
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+
+}
+
+.loader-loading{
+
+    margin-top:8px;
+
+    color:#6c757d;
+
+    font-size:17px;
+
+    font-weight:500;
+
+}
+
+.loader-loading span{
+
+    display:inline-block;
+
+    width:5px;
+    height:5px;
+
+    margin-left:3px;
+
+    border-radius:50%;
+
+    background:#0d6efd;
+
+    animation:blink 1.2s infinite;
+
+}
+
+.loader-loading span:nth-child(2){
+    animation-delay:.2s;
+}
+
+.loader-loading span:nth-child(3){
+    animation-delay:.4s;
+}
+
+@keyframes spin{
+
+100%{
+transform:rotate(360deg);
+}
+
+}
+
+@keyframes blink{
+
+0%,80%,100%{
+opacity:.2;
+transform:translateY(0);
+}
+
+40%{
+opacity:1;
+transform:translateY(-4px);
+}
+
+}
+
+@keyframes fade{
+
+from{
+opacity:0;
+transform:scale(.9);
+}
+
+to{
+opacity:1;
+transform:scale(1);
+}
+
+}
+
+@media(max-width:576px){
+
+.loader-card{
+
+padding:28px;
+
+}
+
+.loader-ring{
+
+width:65px;
+height:65px;
+
+}
+
+.loader-logo{
+
+font-size:26px;
+
+}
+
+.loader-loading{
+
+font-size:15px;
+
+}
+
+}

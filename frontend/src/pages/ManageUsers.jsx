@@ -11,9 +11,9 @@ import {
 function ManageUsers() {
 
   const [users, setUsers] = useState([]);
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
-
+  const [search, setSearch] = useState("");
   const [editingUser, setEditingUser] = useState(null);
   const [studentSearch, setStudentSearch] = useState("");
 
@@ -22,6 +22,9 @@ function ManageUsers() {
   const [organizerSearch, setOrganizerSearch] = useState("");
 
   const [hodSearch, setHodSearch] = useState("");
+
+  const [updating, setUpdating] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   const [formData, setFormData] = useState({
       // Common
@@ -104,6 +107,7 @@ function ManageUsers() {
 
     const handleUpdate = async () => {
     try {
+      setUpdating(true);
       await updateUser(editingUser._id, formData);
 
       fetchUsers();
@@ -112,7 +116,9 @@ function ManageUsers() {
 
     } catch (error) {
       console.log(error);
-    }
+    }finally {
+    setUpdating(false);
+  }
   };
 
   const handleDelete = async (id, name) => {
@@ -125,6 +131,7 @@ function ManageUsers() {
 
   try {
 
+    setDeletingId(id);
     await deleteUser(id);
 
     alert("User Deleted Successfully");
@@ -140,6 +147,8 @@ function ManageUsers() {
       "Delete Failed"
     );
 
+  } finally {
+    setDeletingId(null);
   }
 
 };
@@ -617,11 +626,14 @@ const hods = visibleUsers.filter((user) => {
 
               <button
                 className="btn btn-danger btn-sm w-100 w-lg-auto"
+                disabled={deletingId === user._id}
                 onClick={() =>
-                handleDelete(user._id, user.name)
+                  handleDelete(user._id, user.name)
                 }
               >
-                Delete
+                {deletingId === user._id
+                  ? "Deleting..."
+                  : "Delete"}
               </button>
 
             </td>
@@ -1128,8 +1140,9 @@ const hods = visibleUsers.filter((user) => {
                     <button
                       className="btn btn-success w-100 w-md-auto"
                       onClick={handleUpdate}
+                      disabled={updating}
                     >
-                      Save Changes
+                      {updating ? "Updating..." : "Save Changes"}
                     </button>
 
                   </div>

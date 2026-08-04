@@ -4,8 +4,11 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import { toast, ToastContainer } from "react-toastify";
 import API from "../api/axios";
 import { getStudentEvents } from "../api/eventApi";
+import Loader from "../components/Loader";
 
 function ApplyLeave() {
+  const [loading, setLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [formData, setFormData] = useState({
       studentName: "",
       enrollmentNo: "",
@@ -91,6 +94,7 @@ const handleChange = (e) => {
     }
 
     try {
+      setSubmitLoading(true);
       const response = await API.post("/leave/apply", {
       event: formData.event,
       organizer: formData.organizerId,
@@ -109,7 +113,7 @@ const handleChange = (e) => {
       setFormData((prev) => ({
           event: "",
           organizerId: "",
-          eventName: "",
+          eventName: "",  
           organizer: "",
           leaveFrom: "",
           leaveTo: "",
@@ -122,7 +126,11 @@ const handleChange = (e) => {
       toast.error(
         error.response?.data?.message || "Failed to apply leave"
       );
-    }
+    }finally {
+
+    setSubmitLoading(false);
+
+  }
   };
   const [events, setEvents] = useState([]);
   useEffect(() => {
@@ -131,7 +139,7 @@ const handleChange = (e) => {
 
 const fetchEvents = async () => {
   try {
-
+    setLoading(true);
     const res = await getStudentEvents();
 
     setEvents(res.data.data);
@@ -142,12 +150,20 @@ const fetchEvents = async () => {
 
     toast.error("Failed to load events");
 
+  }finally {
+
+    setLoading(false);
+
   }
 };
 
 console.log("Events State:", events);
 
+if (loading || submitLoading) {
+  return <Loader />;
+}
   return (
+    
     <DashboardLayout>
       <ToastContainer />
 
@@ -324,6 +340,7 @@ console.log("Events State:", events);
 
         </div>
       </div>
+      
     </DashboardLayout>
   );
 }

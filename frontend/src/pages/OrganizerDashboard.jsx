@@ -10,6 +10,7 @@ import {
   getOrganizerLeaves,
   getOrganizerStats,
 } from "../api/organizerApi";
+import Loader from "../components/Loader";
 
 function OrganizerDashboard() {
   const [leaves, setLeaves] = useState([]);
@@ -51,6 +52,10 @@ useEffect(() => {
       console.log(error);
     }
   };
+
+if (loading) {
+  return <Loader />;
+}
 
   return (
     <DashboardLayout>
@@ -116,9 +121,7 @@ useEffect(() => {
       </div>
 
     {loading ? (
-  <div className="text-center mt-5">
-    <h5>Loading...</h5>
-  </div>
+      <Loader />
 ) : (
   <OrganizerLeaveTable
     leaves={leaves}
