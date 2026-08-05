@@ -14,6 +14,7 @@ function Login() {
 
   const [loading, setLoading] = useState(false);      // Login Loader
   const [otpLoading, setOtpLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -341,14 +342,38 @@ if (loading) {
 
             <label>Password</label>
 
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Enter Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
+             <div className="position-relative">
+
+    <input
+      type={showPassword ? "text" : "password"}
+      className="form-control"
+      style={{ paddingRight: "50px" }}
+      placeholder="Enter Password"
+      name="password"
+      value={formData.password}
+      onChange={handleChange}
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      style={{
+        position: "absolute",
+        right: "12px",
+        top: "50%",
+        transform: "translateY(-50%)",
+        border: "none",
+        background: "transparent",
+        padding: 0,
+        fontSize: "20px",
+        cursor: "pointer",
+        zIndex: 5,
+      }}
+    >
+      {showPassword ? "🙈" : "👁"}
+    </button>
+
+  </div>
 
           </div>
 

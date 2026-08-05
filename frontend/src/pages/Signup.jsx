@@ -338,24 +338,36 @@ if (loading) {
       Password
     </label>
 
-    <div className="position-relative">
-      <input
-        type={showPassword ? "text" : "password"}
-        className="form-control rounded-3 py-2 pe-5"
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-        placeholder="Enter Password"
-      />
+  <div className="position-relative">
+  <input
+    type={showPassword ? "text" : "password"}
+    className="form-control rounded-3 py-2"
+    style={{ paddingRight: "50px" }}
+    name="password"
+    value={formData.password}
+    onChange={handleChange}
+    placeholder="Enter Password"
+  />
 
-      <button
-        type="button"
-        className="btn position-absolute top-50 end-0 translate-middle-y border-0 bg-transparent px-3"
-        onClick={() => setShowPassword(!showPassword)}
-      >
-        {showPassword ? "🙈" : "👁"}
-      </button>
-    </div>
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    style={{
+      position: "absolute",
+      right: "12px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      border: "none",
+      background: "transparent",
+      padding: 0,
+      fontSize: "20px",
+      cursor: "pointer",
+      zIndex: 5,
+    }}
+  >
+    {showPassword ? "🙈" : "👁"}
+  </button>
+</div>
 
     <small className="text-muted">
       Password should contain at least 8 characters.
@@ -394,25 +406,37 @@ if (loading) {
     </label>
 
     <div className="position-relative">
-      <input
-        type={showConfirmPassword ? "text" : "password"}
-        className="form-control rounded-3 py-2 pe-5"
-        name="confirmPassword"
-        value={formData.confirmPassword}
-        onChange={handleChange}
-        placeholder="Confirm Password"
-      />
+  <input
+    type={showConfirmPassword ? "text" : "password"}
+    className="form-control rounded-3 py-2"
+    style={{ paddingRight: "50px" }}
+    name="confirmPassword"
+    value={formData.confirmPassword}
+    onChange={handleChange}
+    placeholder="Confirm Password"
+  />
 
-      <button
-        type="button"
-        className="btn position-absolute top-50 end-0 translate-middle-y border-0 bg-transparent px-3"
-        onClick={() =>
-          setShowConfirmPassword(!showConfirmPassword)
-        }
-      >
-        {showConfirmPassword ? "🙈" : "👁"}
-      </button>
-    </div>
+  <button
+    type="button"
+    onClick={() =>
+      setShowConfirmPassword(!showConfirmPassword)
+    }
+    style={{
+      position: "absolute",
+      right: "12px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      border: "none",
+      background: "transparent",
+      padding: 0,
+      fontSize: "20px",
+      cursor: "pointer",
+      zIndex: 5,
+    }}
+  >
+    {showConfirmPassword ? "🙈" : "👁"}
+  </button>
+</div>
 
     {formData.confirmPassword && (
       formData.password === formData.confirmPassword ? (
