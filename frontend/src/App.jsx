@@ -16,10 +16,25 @@ import AdminProfile from "./pages/AdminProfile";
 import ApprovedLeave from "./pages/ApprovedLeave";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Loader from "./components/Loader";
 
 
 
 function App() {
+  const location = useLocation();
+  const [pageLoading, setPageLoading] = useState(false);
+
+  useEffect(() => {
+    setPageLoading(true);
+
+    const timer = setTimeout(() => {
+      setPageLoading(false);
+    }, 500); // adjust time if needed
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
   return (
      <>
 
@@ -27,6 +42,9 @@ function App() {
         position="top-right"
         autoClose={3000}
       />
+
+      {pageLoading && <Loader />}
+       
     <Routes>
       <Route path="/" element={<Login />} />
 

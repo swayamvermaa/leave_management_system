@@ -13,6 +13,7 @@ import Loader from "../components/Loader";
 
 function CreateUser() {
   const [creating, setCreating] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",

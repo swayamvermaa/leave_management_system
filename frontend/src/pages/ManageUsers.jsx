@@ -7,6 +7,7 @@ import {
   SEMESTERS,
   SECTIONS,
 } from "../constants/collegeData";
+import Loader from "../components/Loader";
 
 function ManageUsers() {
 
@@ -25,6 +26,7 @@ function ManageUsers() {
 
   const [updating, setUpdating] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
       // Common
@@ -58,7 +60,7 @@ function ManageUsers() {
   const fetchUsers = async () => {
 
     try {
-
+      setLoading(true);
       const response = await getAllUsers();
 
       setUsers(response.data.data);
@@ -67,7 +69,11 @@ function ManageUsers() {
 
       console.log(error);
 
-    }
+    }finally {
+
+    setLoading(false);
+
+  }
 
   };
 
@@ -231,6 +237,10 @@ const hods = visibleUsers.filter((user) => {
   );
 
 });
+
+if (loading) {
+  return <Loader />;
+}
 
   return (
 

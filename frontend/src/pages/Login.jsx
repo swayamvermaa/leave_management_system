@@ -11,10 +11,11 @@ function Login() {
   const navigate = useNavigate();
   const [timer, setTimer] = useState(300);
   const [canResend, setCanResend] = useState(false);
-
+  const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);      // Login Loader
   const [otpLoading, setOtpLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -30,11 +31,14 @@ function Login() {
     const [otpSent, setOtpSent] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+
+  setLoginError("");
+  setEmailError("");
+};
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -196,16 +200,38 @@ const handleSubmit = async (e) => {
 
     }, 1000);
 
-  } catch (error) {
+  }catch (error) {
 
-    console.error("Login Error:", error);
+  console.error("Login Error:", error);
 
-    toast.error(
-      error.response?.data?.message ||
-      error.message ||
-      "Login Failed"
-    );
-  } finally {
+  const message =
+    error.response?.data?.message ||
+    error.message ||
+    "";
+
+  if (
+    message.toLowerCase().includes("user not found") ||
+    message.toLowerCase().includes("email not found") ||
+    message.toLowerCase().includes("email does not exist") ||
+    message.toLowerCase().includes("no user")
+  ) {
+
+    setEmailError("Email is not registered");
+
+  } else if (
+    message.toLowerCase().includes("password") ||
+    message.toLowerCase().includes("invalid credentials")
+  ) {
+
+    setLoginError("Incorrect Password");
+
+  } else {
+
+    toast.error(message || "Login Failed");
+
+  }
+
+}finally {
     setLoading(false);
   }
 };
@@ -336,7 +362,13 @@ if (loading) {
               onChange={handleChange}
             />
 
+          {emailError && (
+          <small className="text-danger">
+            {emailError}
+          </small>
+        )}
           </div>
+
 
           <div className="mb-3">
 
@@ -375,6 +407,11 @@ if (loading) {
 
   </div>
 
+{loginError && (
+  <small className="text-danger">
+    {loginError}
+  </small>
+)}
           </div>
 
           <button
