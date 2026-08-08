@@ -3225,3 +3225,243 @@ font-size:34px;
 }
 
 }
+
+/* =========================================================
+   SETTINGS LOGOUT - SAME AS MENU ITEMS
+========================================================= */
+
+.settings-logout {
+  width: 100%;
+  min-height: 46px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 8px;
+  padding: 11px 16px;
+
+  background: transparent !important;
+
+  color: #dc3545 !important;
+
+  border: 1px solid transparent !important;
+  border-radius: 10px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Logout Icon */
+
+.settings-logout svg {
+  flex-shrink: 0;
+  font-size: 17px;
+  color: #dc3545;
+}
+
+/* Hover */
+
+.settings-logout:hover {
+  background: #fff1f2 !important;
+  color: #dc3545 !important;
+
+  transform: translateX(2px);
+}
+
+.settings-logout:hover svg {
+  color: #dc3545;
+}
+
+/* Active / Click */
+
+.settings-logout:active {
+  transform: translateX(0);
+}
+
+
+/* =========================================================
+   DESKTOP
+   992px+
+========================================================= */
+
+@media (min-width: 992px) {
+
+  .settings-logout {
+    min-height: 46px;
+
+    margin-top: 10px;
+
+    padding: 11px 16px;
+
+    font-size: 15px;
+
+    gap: 12px;
+  }
+
+  .settings-logout svg {
+    font-size: 17px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+  .settings-logout {
+    min-height: 44px;
+
+    margin-top: 8px;
+
+    padding: 10px 14px;
+
+    font-size: 14px;
+
+    gap: 10px;
+
+    border-radius: 9px;
+  }
+
+  .settings-logout svg {
+    font-size: 16px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   577px - 767px
+========================================================= */
+
+@media (min-width: 577px) and (max-width: 767px) {
+
+  .settings-logout {
+    min-height: 44px;
+
+    margin-top: 7px;
+
+    padding: 10px 13px;
+
+    font-size: 14px;
+
+    gap: 10px;
+
+    border-radius: 9px;
+  }
+
+  .settings-logout svg {
+    font-size: 16px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   376px - 576px
+========================================================= */
+
+@media (min-width: 376px) and (max-width: 576px) {
+
+  .settings-logout {
+    min-height: 43px;
+
+    margin-top: 6px;
+
+    padding: 10px 12px;
+
+    font-size: 14px;
+
+    gap: 10px;
+
+    border-radius: 9px;
+  }
+
+  .settings-logout svg {
+    font-size: 16px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   320px - 375px
+========================================================= */
+
+@media (max-width: 375px) {
+
+  .settings-logout {
+    min-height: 42px;
+
+    margin-top: 5px;
+
+    padding: 9px 11px;
+
+    font-size: 13px;
+
+    gap: 9px;
+
+    border-radius: 8px;
+  }
+
+  .settings-logout svg {
+    font-size: 15px;
+  }
+
+}
+
+
+/* =========================================================
+   DARK THEME
+========================================================= */
+
+body.dark-theme .settings-logout {
+  color: #ff6b7a !important;
+}
+
+body.dark-theme .settings-logout svg {
+  color: #ff6b7a;
+}
+
+body.dark-theme .settings-logout:hover {
+  background: rgba(220, 53, 69, 0.12) !important;
+  color: #ff6b7a !important;
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+  .settings-logout:hover {
+    background: transparent !important;
+    transform: none;
+  }
+
+  .settings-logout:active {
+    background: #fff1f2 !important;
+  }
+
+  body.dark-theme .settings-logout:active {
+    background: rgba(220, 53, 69, 0.12) !important;
+  }
+
+}

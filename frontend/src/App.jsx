@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import Loader from "./components/Loader";
 import Settings from "./pages/Settings";
 
+import Home from "./pages/Home";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -58,7 +60,11 @@ function App() {
       {pageLoading && <Loader />}
        
     <Routes>
-      <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
+
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/signup" element={<Signup />} />
 
       <Route
         path="/student-dashboard"

@@ -7,13 +7,15 @@ import NotificationSettings from "../components/settings/NotificationSettings";
 import SecuritySettings from "../components/settings/SecuritySettings";
 import LanguageSettings from "../components/settings/LanguageSettings";
 import AboutSettings from "../components/settings/AboutSettings";
+import { useNavigate } from "react-router-dom";
 
 import {
-    FaDesktop,
-    FaBell,
-    FaShieldAlt,
-    FaLanguage,
-    FaInfoCircle
+  FaDesktop,
+  FaBell,
+  FaShieldAlt,
+  FaLanguage,
+  FaInfoCircle,
+  FaSignOutAlt
 } from "react-icons/fa";
 
 import "../styles/settings.css";
@@ -21,6 +23,15 @@ import "../styles/settings.css";
 function Settings(){
 
     const [active,setActive]=useState("display");
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("pendingRegistration");
+
+    navigate("/");
+    };
 
     const menus=[
         {
@@ -83,8 +94,14 @@ function Settings(){
                             </button>
 
                         ))
-
                     }
+                        <button
+                        className="settings-menu settings-logout"
+                        onClick={handleLogout}
+                        >
+                        <FaSignOutAlt />
+                        <span>Logout</span>
+                        </button>
 
                 </div>
 
@@ -99,6 +116,7 @@ function Settings(){
                     {active==="language" && <LanguageSettings/>}
 
                     {active==="about" && <AboutSettings/>}
+                    
 
                 </div>
 
