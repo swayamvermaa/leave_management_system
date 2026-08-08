@@ -84,6 +84,8 @@ const handleChange = (e) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
+    toast.error("TEST TOAST");
+
   if (
     !formData.name ||
     !formData.email ||
@@ -143,10 +145,17 @@ const handleSubmit = async (e) => {
     // ==========================================
     // 3. SHOW SUCCESS
     // ==========================================
+    console.log("FIREBASE SIGNUP SUCCESS");
 
     toast.success(
-      "Account created! Please verify your email, then login."
+      "Account created! Please verify your email (open Gmail -> Spam), then login.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+        }
     );
+
+    // console.log("TOAST CALLED");
 
     // ==========================================
     // 4. GO TO LOGIN
@@ -154,15 +163,23 @@ const handleSubmit = async (e) => {
 
     setTimeout(() => {
       navigate("/");
-    }, 2500);
+    }, 6000);
 
   } catch (error) {
-    console.error("Signup Error:", error);
+    // console.error("Signup Error:", error);
+    // console.error("ERROR CODE:", error?.code);
+    // console.error("ERROR MESSAGE:", error?.message);
+
 
     toast.error(
       error.code === "auth/email-already-in-use"
         ? "This email is already registered in Firebase."
-        : error.message || "Registration failed"
+        : error.message || "Registration failed",
+            {
+      position: "top-right",
+      autoClose: 5000,
+    }
+        
     );
 
   } finally {
@@ -176,8 +193,6 @@ if (loading) {
 
   return (
     <div className="container py-5">
-
-      <ToastContainer />
 
       <div className="card border-0 shadow-lg rounded-4">
 

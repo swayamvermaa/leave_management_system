@@ -181,7 +181,7 @@ function Navbar({ setSidebarOpen }) {
             {showNotifications && (
 
               <div
-                className="position-absolute bg-white shadow-lg rounded-3 p-3"
+                className="notification-popup position-absolute bg-white shadow-lg rounded-3 p-3"
                 style={{
                   width: window.innerWidth < 576
                     ? "95vw"
@@ -240,21 +240,13 @@ function Navbar({ setSidebarOpen }) {
                         {event.eventName}
                       </div>
 
-                      <div className="small text-muted mt-1">
+                      <div className="small notification-text mt-1">
                         📅 {formatDate(event.startDate)} - {formatDate(event.endDate)}
                       </div>
 
-                      <div className="small text-muted">
+                      <div className="small notification-text">
                         📍 {event.venue || "Venue not specified"}
                       </div>
-
-                      <div className="small text-muted mt-1">
-                        📅 {formatDate(event.startDate)}
-                        </div>
-
-                        <div className="small text-muted">
-                        📍 {event.venue}
-                        </div>
 
                       <div className="mt-2">
 

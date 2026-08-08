@@ -3,7 +3,6 @@ import "./Loader.css";
 function Loader() {
   return (
     <div className="loader-overlay">
-
       <div className="loader-card">
 
         <div className="loader-ring">
@@ -22,7 +21,6 @@ function Loader() {
         </p>
 
       </div>
-
     </div>
   );
 }

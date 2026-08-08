@@ -8,6 +8,7 @@ import {
   FaCalendarAlt,
   FaCheckCircle,
 } from "react-icons/fa";
+import { FaCog } from "react-icons/fa";
 
 export const sidebarMenus = {
   student: [
@@ -35,6 +36,11 @@ export const sidebarMenus = {
       name: "Approved Leaves",
       path: "/approved-leaves",
       icon: FaCheckCircle,
+    },
+    {
+        name: "Settings",
+        path: "/settings",
+        icon: FaCog,
     },
   ],
 
@@ -64,6 +70,11 @@ export const sidebarMenus = {
       path: "/admin-profile",
       icon: FaUserCircle,
     },
+        {
+        name: "Settings",
+        path: "/settings",
+        icon: FaCog,
+    },
   ],
 
   organizer: [
@@ -77,6 +88,11 @@ export const sidebarMenus = {
       path: "/profile",
       icon: FaUsers,
     },
+    {
+    name: "Settings",
+    path: "/settings",
+    icon: FaCog,
+},
   ],
 
   mentor: [
@@ -90,6 +106,11 @@ export const sidebarMenus = {
       path: "/profile",
       icon: FaUsers,
     },
+    {
+    name: "Settings",
+    path: "/settings",
+    icon: FaCog,
+},
   ],
 
   hod: [
@@ -102,6 +123,11 @@ export const sidebarMenus = {
       name: "Profile",
       path: "/profile",
       icon: FaUsers,
+    },
+    {
+        name: "Settings",
+        path: "/settings",
+        icon: FaCog,
     },
   ],
 };

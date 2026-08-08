@@ -5,18 +5,23 @@ dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: process.env.BREVO_HOST,
-  port: parseInt(process.env.BREVO_PORT),
+  port: Number(process.env.BREVO_PORT),
   secure: false,
   auth: {
     user: process.env.BREVO_USER,
     pass: process.env.BREVO_PASS,
   },
-  tls: {
-    rejectUnauthorized: false,
-  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
-console.log("HOST:", process.env.BREVO_HOST);
-console.log("PORT:", process.env.BREVO_PORT);
+transporter.verify((err, success) => {
+  if (err) {
+    console.log("SMTP VERIFY ERROR:", err);
+  } else {
+    console.log("SMTP Connected Successfully");
+  }
+});
 
 export default transporter;

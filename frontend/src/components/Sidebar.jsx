@@ -7,9 +7,12 @@ import {
   FaHistory,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { firebaseLogout } from "../api/authApi";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
   const menuItems = sidebarMenus[user?.role] || [];
   const isTabletOrMobile = window.innerWidth < 992;
 

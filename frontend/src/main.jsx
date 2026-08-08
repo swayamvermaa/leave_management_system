@@ -10,13 +10,17 @@ import "./styles/navbar.css";
 import "./styles/form.css";
 import "./styles/history.css";
 import "./styles/responsive.css";
+import { ThemeProvider } from "./context/ThemeContext";
+import "./styles/darkTheme.css";
 
 import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+   <ThemeProvider>
     <BrowserRouter>
       <App />
     </BrowserRouter>
+   </ThemeProvider>
   </React.StrictMode>
 );

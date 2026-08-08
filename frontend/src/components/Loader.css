@@ -1,12 +1,15 @@
-.loader-overlay{
-    position:fixed;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:rgba(255,255,255,.75);
-    backdrop-filter:blur(8px);
-    z-index:99999;
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(6px);
+
+  z-index: 2000;
 }
 
 .loader-card{
@@ -174,4 +177,254 @@ font-size:15px;
 
 }
 
+}
+/* =========================================
+   GLOBAL LOADER
+========================================= */
+
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(6px);
+
+  /* Toast se neeche */
+  z-index: 2000;
+
+  animation: loaderFade 0.25s ease;
+}
+
+
+/* =========================================
+   LOADER CARD
+========================================= */
+
+.loader-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 38px 45px;
+
+  border-radius: 24px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.15);
+
+  animation: loaderCard 0.35s ease;
+}
+
+
+/* =========================================
+   RING
+========================================= */
+
+.loader-ring {
+  width: 76px;
+  height: 76px;
+
+  border-radius: 50%;
+
+  border: 6px solid #e9ecef;
+  border-top-color: #0d6efd;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  animation: loaderSpin 0.85s linear infinite;
+}
+
+
+.loader-ring-inner {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: rgba(13, 110, 253, 0.12);
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.loader-logo {
+  margin: 20px 0 0;
+
+  font-size: 28px;
+  font-weight: 800;
+
+  letter-spacing: 2px;
+
+  background: linear-gradient(
+    90deg,
+    #0d6efd,
+    #6610f2
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* =========================================
+   LOADING TEXT
+========================================= */
+
+.loader-loading {
+  margin: 7px 0 0;
+
+  color: #6c757d;
+
+  font-size: 16px;
+  font-weight: 500;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.loader-loading span {
+  display: inline-block;
+
+  width: 5px;
+  height: 5px;
+
+  margin-left: 3px;
+
+  border-radius: 50%;
+
+  background: #0d6efd;
+
+  animation: loaderBlink 1.2s infinite;
+}
+
+.loader-loading span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loader-loading span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes loaderSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loaderBlink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+
+  40% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes loaderFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loaderCard {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* =========================================
+   DARK THEME
+========================================= */
+
+body.dark-theme .loader-overlay {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+body.dark-theme .loader-card {
+  background: #1f1f1f;
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.45);
+}
+
+body.dark-theme .loader-ring {
+  border-color: #3a3a3a;
+  border-top-color: #4da3ff;
+}
+
+body.dark-theme .loader-ring-inner {
+  background: rgba(77, 163, 255, 0.12);
+}
+
+body.dark-theme .loader-loading {
+  color: #bdbdbd;
+}
+
+body.dark-theme .loader-loading span {
+  background: #4da3ff;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+
+  .loader-card {
+    padding: 28px 32px;
+    border-radius: 20px;
+  }
+
+  .loader-ring {
+    width: 64px;
+    height: 64px;
+    border-width: 5px;
+  }
+
+  .loader-ring-inner {
+    width: 36px;
+    height: 36px;
+  }
+
+  .loader-logo {
+    font-size: 24px;
+  }
+
+  .loader-loading {
+    font-size: 14px;
+  }
 }

@@ -14,11 +14,14 @@ import ManageEvents from "./pages/ManageEvents";
 import Profile from "./pages/Profile";
 import AdminProfile from "./pages/AdminProfile";
 import ApprovedLeave from "./pages/ApprovedLeave";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Loader from "./components/Loader";
+import Settings from "./pages/Settings";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 
 
@@ -39,8 +42,17 @@ function App() {
      <>
 
       <ToastContainer
-        position="top-right"
-        autoClose={3000}
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="colored"
+          style={{
+            zIndex: 9999999,
+          }}
       />
 
       {pageLoading && <Loader />}
@@ -117,6 +129,12 @@ function App() {
       path="/admin-profile"
       element={<AdminProfile />}
     />
+
+    <Route
+        path="/settings"
+        element={<Settings />}
+    />
+
     </Routes>
     
     </>
